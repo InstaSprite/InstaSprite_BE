@@ -1,0 +1,123 @@
+package org.olaz.instasprite_be.domain.member.entity;
+
+import java.util.List;
+
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
+import org.olaz.instasprite_be.domain.follow.entity.Follow;
+import org.olaz.instasprite_be.global.vo.Image;
+import org.olaz.instasprite_be.global.vo.ImageType;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+
+@Getter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "members")
+public class Member {
+
+    @Id
+    @Column(name = "member_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "member_username", nullable = false, length = 20, unique = true)
+    private String username;
+
+    @Column(name = "google_id", unique = true)
+    private String googleId;
+
+    @Column(name = "member_role")
+    @Enumerated(EnumType.STRING)
+    private MemberRole role;
+
+    @Column(name = "member_name", nullable = false, length = 20)
+    private String name;
+
+    @Column(name = "member_introduce", columnDefinition = "TEXT")
+    private String introduce;
+
+    @Column(name = "email")
+    private String email;
+
+    @OneToMany(mappedBy = "member")
+    private List<Follow> followings;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "imageUrl", column = @Column(name = "member_image_url")),
+            @AttributeOverride(name = "imageType", column = @Column(name = "member_image_type")),
+            @AttributeOverride(name = "imageName", column = @Column(name = "member_image_name")),
+            @AttributeOverride(name = "imageUUID", column = @Column(name = "member_image_uuid"))
+    })
+    private Image image;
+
+    @Builder
+    public Member(String username, String name, String googleId, String email) {
+        this.username = username;
+        this.name = name;
+        this.email = email;
+        this.googleId = googleId;
+
+        this.role = MemberRole.ROLE_USER;
+        this.image = Image.builder()
+                .imageName("default")
+                .imageType(ImageType.PNG)
+                .imageUrl("default.png")
+                .imageUUID("base-UUID")
+                .build();
+    }
+
+    public void updateUsername(String username) {
+        this.username = username;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateIntroduce(String introduce) {
+        this.introduce = introduce;
+    }
+
+    public void updateEmail(String email) {
+        this.email = email;
+    }
+
+    public void uploadImage(Image image) {
+        deleteImage();
+        this.image = image;
+    }
+
+    public void deleteImage() {
+        if (this.image.getImageUUID().equals("base-UUID"))
+            return;
+
+        this.image = Image.builder()
+                .imageName("default")
+                .imageType(ImageType.PNG)
+                .imageUrl("default.png")
+                .imageUUID("base-UUID")
+                .build();
+    }
+
+}
