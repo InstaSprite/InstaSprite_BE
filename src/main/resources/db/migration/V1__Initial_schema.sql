@@ -1,0 +1,222 @@
+
+-- CREATE TABLE follow_hashtag (
+--   follow_id bigint NOT NULL,
+--   member_id bigint NULL,
+--   hashtag_id bigint NOT NULL
+-- );
+--
+--
+--
+-- CREATE TABLE post_hashtag (
+--   post_hashtag_id bigint NOT NULL,
+--   post_id bigint NOT NULL,
+--   hashtag_id bigint NOT NULL
+-- );
+
+-- CREATE TABLE search (
+--   search_id bigint NOT NULL,
+--   search_count bigint NULL,
+--   search_type VARCHAR(50) NULL
+-- );
+
+-- CREATE TABLE post_tag (
+--   post_tag_id bigint NOT NULL,
+--   post_image_id bigint NOT NULL,
+--   post_tag_coord_y INT NULL,
+--   post_tag_coord_x INT NULL,
+--   post_tag_username VARCHAR(50) NULL
+-- );
+
+
+
+CREATE TABLE posts (
+  post_id bigint NOT NULL,
+  member_id bigint NULL,
+  post_content TEXT NULL,
+  post_uploaded_at TIMESTAMP NULL,
+  post_comments_enabled BOOLEAN NULL
+);
+
+
+
+-- CREATE TABLE notifications (
+--   notification_id bigint NOT NULL,
+--   actor_member_id bigint NULL,
+--   target_member_id bigint NULL,
+--   post_id bigint NULL,
+--   comment_id bigint NULL,
+--   follow_id bigint NULL,
+--   notification_at TIMESTAMP NULL
+-- );
+
+CREATE TABLE post_image (
+  post_image_id bigint NOT NULL,
+  post_id bigint NOT NULL,
+  post_image_url VARCHAR(500) NULL,
+  post_image_type VARCHAR(50) NULL,
+  post_image_name VARCHAR(255) NULL,
+  post_image_uuid VARCHAR(36) NULL,
+  post_image_alt_text VARCHAR(500) NULL
+);
+
+CREATE TABLE saved_post (
+  saved_post_id bigint NOT NULL,
+  member_id bigint NULL,
+  post_id bigint NOT NULL
+);
+
+
+
+CREATE TABLE follows (
+  follow_id bigint NOT NULL,
+  follower_member_id bigint NULL,
+  member_id bigint NULL
+);
+
+
+
+CREATE TABLE comment_like (
+  comment_like_id bigint NOT NULL,
+  member_id bigint NULL,
+  comment_id bigint NOT NULL
+);
+
+-- CREATE TABLE search_hashtag (
+--   search_id bigint NOT NULL,
+--   hashtag_id bigint NOT NULL
+-- );
+
+CREATE TABLE member (
+  member_id bigint NOT NULL,
+  member_username VARCHAR(50) NULL,
+  member_role VARCHAR(20) NULL,
+  member_password VARCHAR(255) NULL,
+  member_name VARCHAR(100) NULL,
+  member_website VARCHAR(500) NULL,
+  member_bio TEXT NULL,
+  member_contact VARCHAR(100) NULL,
+  member_gender VARCHAR(10) NULL,
+  member_image_url VARCHAR(500) NULL,
+  member_image_type VARCHAR(50) NULL,
+  member_image_name VARCHAR(255) NULL,
+  member_image_uuid VARCHAR(36) NULL
+);
+
+
+
+CREATE TABLE post_like (
+  post_like_id bigint NOT NULL,
+  member_id bigint NULL,
+  post_id bigint NOT NULL
+);
+
+CREATE TABLE comment (
+  comment_id bigint NOT NULL,
+  member_id bigint NULL,
+  post_id bigint NOT NULL,
+  parent_comment_id bigint NULL,
+  comment_content TEXT NULL,
+  comment_posted_at TIMESTAMP NULL
+);
+-- CREATE TABLE search_member (
+--   search_id bigint NOT NULL,
+--   member_id bigint NULL
+-- );
+
+-- CREATE TABLE hashtag (
+--   hashtag_id bigint NOT NULL,
+--   hashtag_name VARCHAR(100) NULL,
+--   hashtag_count bigint NULL
+-- );
+
+
+-- CREATE TABLE mention (
+--   mention_id bigint NOT NULL,
+--   actor_member_id bigint NULL,
+--   target_member_id bigint NULL,
+--   post_id bigint NULL,
+--   comment_id bigint NULL,
+--   mentioned_at TIMESTAMP NULL,
+--   mention_type VARCHAR(20) NULL
+-- );
+
+
+-- CREATE TABLE post_latest_comment (
+--   post_latest_comment_id bigint NOT NULL,
+--   member_id bigint NULL,
+--   post_id bigint NOT NULL,
+--   latest_comment_id bigint NOT NULL
+-- );
+
+
+-- ALTER TABLE follow_hashtag ADD CONSTRAINT PK_follow_hashtag PRIMARY KEY (follow_id);
+-- ALTER TABLE post_hashtag ADD CONSTRAINT PK_post_hashtag PRIMARY KEY (post_hashtag_id);
+-- ALTER TABLE search ADD CONSTRAINT PK_search PRIMARY KEY (search_id);
+-- ALTER TABLE post_tag ADD CONSTRAINT PK_post_tag PRIMARY KEY (post_tag_id);
+ALTER TABLE posts ADD CONSTRAINT PK_post PRIMARY KEY (post_id);
+-- ALTER TABLE notification ADD CONSTRAINT PK_notification PRIMARY KEY (notification_id);
+ALTER TABLE post_image ADD CONSTRAINT PK_post_image PRIMARY KEY (post_image_id);
+ALTER TABLE saved_post ADD CONSTRAINT PK_saved_post PRIMARY KEY (saved_post_id);
+ALTER TABLE follows ADD CONSTRAINT PK_follow PRIMARY KEY (follow_id);
+ALTER TABLE comment_like ADD CONSTRAINT PK_comment_like PRIMARY KEY (comment_like_id);
+-- ALTER TABLE search_hashtag ADD CONSTRAINT PK_search_hashtag PRIMARY KEY (search_id);
+ALTER TABLE member ADD CONSTRAINT PK_member PRIMARY KEY (member_id);
+ALTER TABLE post_like ADD CONSTRAINT PK_post_like PRIMARY KEY (post_like_id);
+ALTER TABLE comment ADD CONSTRAINT PK_comment PRIMARY KEY (comment_id);
+-- ALTER TABLE search_member ADD CONSTRAINT PK_search_member PRIMARY KEY (search_id);
+-- ALTER TABLE hashtag ADD CONSTRAINT PK_hashtag PRIMARY KEY (hashtag_id);
+-- ALTER TABLE mention ADD CONSTRAINT PK_mention PRIMARY KEY (mention_id);
+-- ALTER TABLE post_latest_comment ADD CONSTRAINT PK_post_latest_comment PRIMARY KEY (post_latest_comment_id);
+
+
+-- Foreign Key Constraints
+-- ALTER TABLE follow_hashtag ADD CONSTRAINT FK_follow_follow_hashtag FOREIGN KEY (follow_id) REFERENCES follows (follow_id);
+-- ALTER TABLE follow_hashtag ADD CONSTRAINT FK_member_follow_hashtag FOREIGN KEY (member_id) REFERENCES member (member_id);
+-- ALTER TABLE follow_hashtag ADD CONSTRAINT FK_hashtag_follow_hashtag FOREIGN KEY (hashtag_id) REFERENCES hashtag (hashtag_id);
+
+-- ALTER TABLE post_hashtag ADD CONSTRAINT FK_post_post_hashtag FOREIGN KEY (post_id) REFERENCES posts (post_id);
+-- ALTER TABLE post_hashtag ADD CONSTRAINT FK_hashtag_post_hashtag FOREIGN KEY (hashtag_id) REFERENCES hashtag (hashtag_id);
+-- ALTER TABLE post_tag ADD CONSTRAINT FK_post_image_post_tag FOREIGN KEY (post_image_id) REFERENCES post_image (post_image_id);
+
+ALTER TABLE posts ADD CONSTRAINT FK_member_post FOREIGN KEY (member_id) REFERENCES member (member_id);
+
+-- ALTER TABLE notification ADD CONSTRAINT FK_member_actor_notification FOREIGN KEY (actor_member_id) REFERENCES member (member_id);
+-- ALTER TABLE notification ADD CONSTRAINT FK_member_target_notification FOREIGN KEY (target_member_id) REFERENCES member (member_id);
+-- ALTER TABLE notification ADD CONSTRAINT FK_post_notification FOREIGN KEY (post_id) REFERENCES posts (post_id);
+-- ALTER TABLE notification ADD CONSTRAINT FK_comment_notification FOREIGN KEY (comment_id) REFERENCES comment (comment_id);
+-- ALTER TABLE notification ADD CONSTRAINT FK_follow_notification FOREIGN KEY (follow_id) REFERENCES follows (follow_id);
+
+ALTER TABLE post_image ADD CONSTRAINT FK_post_post_image FOREIGN KEY (post_id) REFERENCES posts (post_id);
+
+ALTER TABLE saved_post ADD CONSTRAINT FK_member_saved_post FOREIGN KEY (member_id) REFERENCES member (member_id);
+ALTER TABLE saved_post ADD CONSTRAINT FK_post_saved_post FOREIGN KEY (post_id) REFERENCES posts (post_id);
+
+ALTER TABLE follows ADD CONSTRAINT FK_member_follower_follow FOREIGN KEY (follower_member_id) REFERENCES member (member_id);
+ALTER TABLE follows ADD CONSTRAINT FK_member_follow FOREIGN KEY (member_id) REFERENCES member (member_id);
+
+ALTER TABLE comment_like ADD CONSTRAINT FK_member_comment_like FOREIGN KEY (member_id) REFERENCES member (member_id);
+ALTER TABLE comment_like ADD CONSTRAINT FK_comment_comment_like FOREIGN KEY (comment_id) REFERENCES comment (comment_id);
+
+-- ALTER TABLE search_hashtag ADD CONSTRAINT FK_search_search_hashtag FOREIGN KEY (search_id) REFERENCES search (search_id);
+-- ALTER TABLE search_hashtag ADD CONSTRAINT FK_hashtag_search_hashtag FOREIGN KEY (hashtag_id) REFERENCES hashtag (hashtag_id);
+
+ALTER TABLE post_like ADD CONSTRAINT FK_member_post_like FOREIGN KEY (member_id) REFERENCES member (member_id);
+ALTER TABLE post_like ADD CONSTRAINT FK_post_post_like FOREIGN KEY (post_id) REFERENCES posts (post_id);
+
+ALTER TABLE comment ADD CONSTRAINT FK_member_comment FOREIGN KEY (member_id) REFERENCES member (member_id);
+ALTER TABLE comment ADD CONSTRAINT FK_post_comment FOREIGN KEY (post_id) REFERENCES posts (post_id);
+ALTER TABLE comment ADD CONSTRAINT FK_comment_parent_comment FOREIGN KEY (parent_comment_id) REFERENCES comment (comment_id);
+
+-- ALTER TABLE search_member ADD CONSTRAINT FK_search_search_member FOREIGN KEY (search_id) REFERENCES search (search_id);
+-- ALTER TABLE search_member ADD CONSTRAINT FK_member_search_member FOREIGN KEY (member_id) REFERENCES member (member_id);
+
+-- ALTER TABLE mention ADD CONSTRAINT FK_member_actor_mention FOREIGN KEY (actor_member_id) REFERENCES member (member_id);
+-- ALTER TABLE mention ADD CONSTRAINT FK_member_target_mention FOREIGN KEY (target_member_id) REFERENCES member (member_id);
+-- ALTER TABLE mention ADD CONSTRAINT FK_post_mention FOREIGN KEY (post_id) REFERENCES posts (post_id);
+-- ALTER TABLE mention ADD CONSTRAINT FK_comment_mention FOREIGN KEY (comment_id) REFERENCES comment (comment_id);
+
+-- ALTER TABLE post_latest_comment ADD CONSTRAINT FK_member_post_latest_comment FOREIGN KEY (member_id) REFERENCES member (member_id);
+-- ALTER TABLE post_latest_comment ADD CONSTRAINT FK_post_post_latest_comment FOREIGN KEY (post_id) REFERENCES posts (post_id);
+-- ALTER TABLE post_latest_comment ADD CONSTRAINT FK_comment_post_latest_comment FOREIGN KEY (latest_comment_id) REFERENCES comment (comment_id);
+
+

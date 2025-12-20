@@ -10,8 +10,8 @@ import org.olaz.instasprite_be.domain.member.dto.GoogleUserInfo;
 import org.olaz.instasprite_be.domain.member.dto.JwtDto;
 import org.olaz.instasprite_be.domain.member.entity.Member;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
-import org.olaz.instasprite_be.domain.search.entity.SearchMember;
-import org.olaz.instasprite_be.domain.search.repository.SearchMemberRepository;
+//import org.olaz.instasprite_be.domain.search.entity.SearchMember;
+//import org.olaz.instasprite_be.domain.search.repository.SearchMemberRepository;
 import org.olaz.instasprite_be.global.error.exception.GoogleAuthFailException;
 import org.olaz.instasprite_be.global.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +34,7 @@ import java.util.Collections;
 public class GoogleOAuthService {
 
     private final MemberRepository memberRepository;
-    private final SearchMemberRepository searchMemberRepository;
+//    private final SearchMemberRepository searchMemberRepository;
     private final JwtUtil jwtUtil;
 
     @Value("${google.client-id}")
@@ -134,15 +134,15 @@ public class GoogleOAuthService {
             Member savedMember = memberRepository.save(member);
             log.info("Member saved successfully with ID: {}", savedMember.getId());
 
-            // Create search member entry
-            try {
-                SearchMember searchMember = new SearchMember(savedMember);
-                searchMemberRepository.save(searchMember);
-                log.info("SearchMember created successfully for user: {}", savedMember.getUsername());
-            } catch (Exception e) {
-                log.error("Failed to create SearchMember for user: {}", savedMember.getUsername(), e);
-                // Don't rethrow - the main member is already saved
-            }
+//            // Create search member entry
+//            try {
+//                SearchMember searchMember = new SearchMember(savedMember);
+//                searchMemberRepository.save(searchMember);
+//                log.info("SearchMember created successfully for user: {}", savedMember.getUsername());
+//            } catch (Exception e) {
+//                log.error("Failed to create SearchMember for user: {}", savedMember.getUsername(), e);
+//                // Don't rethrow - the main member is already saved
+//            }
 
             log.info("Created new Google user: {}", savedMember.getUsername());
             return savedMember;

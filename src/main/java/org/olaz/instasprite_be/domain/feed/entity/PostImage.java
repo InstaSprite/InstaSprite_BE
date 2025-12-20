@@ -29,7 +29,7 @@ import org.olaz.instasprite_be.global.vo.Image;
 
 @Getter
 @Entity
-@Table(name = "post_images")
+@Table(name = "post_image")
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostImage {
@@ -48,15 +48,15 @@ public class PostImage {
 		@AttributeOverride(name = "imageUrl", column = @Column(name = "post_image_url")),
 		@AttributeOverride(name = "imageType", column = @Column(name = "post_image_type")),
 		@AttributeOverride(name = "imageName", column = @Column(name = "post_image_name")),
-		@AttributeOverride(name = "imageUUID", column = @Column(name = "post_image_uuid"))
+		@AttributeOverride(name = "imageUUID", column = @Column(name = "post_image_uuid")),
 	})
 	private Image image;
 
 	@Column(name = "post_image_alt_text")
 	private String altText;
 
-	@OneToMany(mappedBy = "postImage", orphanRemoval = true)
-	private List<PostTag> postTags = new ArrayList<>();
+//	@OneToMany(mappedBy = "postImage", orphanRemoval = true)
+//	private List<PostTag> postTags = new ArrayList<>();
 
 	@Builder
 	public PostImage(Post post, Image image, String altText) {

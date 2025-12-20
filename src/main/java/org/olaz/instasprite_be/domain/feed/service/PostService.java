@@ -1,6 +1,6 @@
 package org.olaz.instasprite_be.domain.feed.service;
 
-import static org.olaz.instasprite_be.domain.alarm.dto.AlarmType.*;
+//import static org.olaz.instasprite_be.domain.alarm.dto.AlarmType.*;
 import static org.olaz.instasprite_be.global.error.ErrorCode.*;
 import static org.olaz.instasprite_be.global.util.ConstantUtils.*;
 import static java.util.stream.Collectors.*;
@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
-import org.olaz.instasprite_be.domain.alarm.service.AlarmService;
+//import org.olaz.instasprite_be.domain.alarm.service.AlarmService;
 import org.olaz.instasprite_be.domain.feed.dto.CommentDto;
 import org.olaz.instasprite_be.domain.feed.dto.PostDto;
 import org.olaz.instasprite_be.domain.feed.dto.PostImageDto;
@@ -40,17 +40,17 @@ import org.olaz.instasprite_be.domain.feed.repository.CommentRepository;
 import org.olaz.instasprite_be.domain.feed.repository.PostImageRepository;
 import org.olaz.instasprite_be.domain.feed.repository.PostLikeRepository;
 import org.olaz.instasprite_be.domain.feed.repository.PostRepository;
-import org.olaz.instasprite_be.domain.feed.repository.PostTagRepository;
+//import org.olaz.instasprite_be.domain.feed.repository.PostTagRepository;
 import org.olaz.instasprite_be.domain.follow.entity.Follow;
 import org.olaz.instasprite_be.domain.follow.service.FollowService;
-import org.olaz.instasprite_be.domain.hashtag.repository.HashtagPostRepository;
-import org.olaz.instasprite_be.domain.hashtag.repository.HashtagRepository;
-import org.olaz.instasprite_be.domain.hashtag.service.HashtagService;
+//import org.olaz.instasprite_be.domain.hashtag.repository.HashtagPostRepository;
+//import org.olaz.instasprite_be.domain.hashtag.repository.HashtagRepository;
+//import org.olaz.instasprite_be.domain.hashtag.service.HashtagService;
 import org.olaz.instasprite_be.domain.member.dto.LikeMemberDto;
 import org.olaz.instasprite_be.domain.member.dto.MemberDto;
 import org.olaz.instasprite_be.domain.member.entity.Member;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
-import org.olaz.instasprite_be.domain.mention.service.MentionService;
+//import org.olaz.instasprite_be.domain.mention.service.MentionService;
 import org.olaz.instasprite_be.global.error.ErrorResponse.FieldError;
 import org.olaz.instasprite_be.global.error.exception.EntityAlreadyExistException;
 import org.olaz.instasprite_be.global.error.exception.EntityNotFoundException;
@@ -68,15 +68,15 @@ public class PostService {
 	private final MemberRepository memberRepository;
 	private final PostLikeRepository postLikeRepository;
 	private final PostImageRepository postImageRepository;
-	private final PostTagRepository postTagRepository;
+//	private final PostTagRepository postTagRepository;
 	private final BookmarkRepository bookmarkRepository;
 	private final CommentRepository commentRepository;
-	private final HashtagRepository hashtagRepository;
-	private final HashtagPostRepository hashtagPostRepository;
-	private final AlarmService alarmService;
+//	private final HashtagRepository hashtagRepository;
+//	private final HashtagPostRepository hashtagPostRepository;
+//	private final AlarmService alarmService;
 	private final CommentService commentService;
-	private final MentionService mentionService;
-	private final HashtagService hashtagService;
+//	private final MentionService mentionService;
+//	private final HashtagService hashtagService;
 	private final PostLikeService postLikeService;
 	private final PostImageService postImageService;
 	private final FollowService followService;
@@ -86,26 +86,25 @@ public class PostService {
 	public PostUploadResponse upload(PostUploadRequest request) {
 		final List<MultipartFile> postImages = request.getPostImages();
 		final List<String> altTexts = request.getAltTexts();
-		final List<PostImageTagRequest> postImageTags = request.getPostImageTags();
-		validateParameters(postImages.size(), altTexts.size(), postImageTags);
+//		final List<PostImageTagRequest> postImageTags = request.getPostImageTags();
+		validateParameters(postImages.size(), altTexts.size());
 
 		final Member loginMember = authUtil.getLoginMember();
 		final Post post = Post.builder()
 			.content(request.getContent())
 			.member(loginMember)
 			.commentFlag(request.isCommentFlag())
-			.likeFlag(request.isLikeFlag())
 			.build();
 
 		postRepository.save(post);
-		postImageService.saveAll(post, request.getPostImages(), request.getAltTexts(), request.getPostImageTags());
-		hashtagService.registerHashtags(post);
-		mentionService.mentionMembers(loginMember, post);
+		postImageService.saveAll(post, request.getPostImages(), request.getAltTexts());
+//		hashtagService.registerHashtags(post);
+//		mentionService.mentionMembers(loginMember, post);
 
-		final Set<String> taggedMemberUsernames = request.getPostImageTags().stream()
-			.map(PostImageTagRequest::getUsername)
-			.collect(toSet());
-		taggedMemberUsernames.remove(loginMember.getUsername());
+//		final Set<String> taggedMemberUsernames = request.getPostImageTags().stream()
+//			.map(PostImageTagRequest::getUsername)
+//			.collect(toSet());
+//		taggedMemberUsernames.remove(loginMember.getUsername());
 
 		return new PostUploadResponse(post.getId());
 	}
@@ -119,9 +118,9 @@ public class PostService {
 			throw new CantDeletePostException();
 		}
 
-		alarmService.deleteAll(post);
-		hashtagService.unregisterHashtagsByDeletingPost(post);
-		mentionService.deleteAll(post);
+//		alarmService.deleteAll(post);
+//		hashtagService.unregisterHashtagsByDeletingPost(post);
+//		mentionService.deleteAll(post);
 		postLikeService.deleteAll(post);
 		postImageService.deleteAll(post);
 		commentService.deleteAllInPost(post);
@@ -204,7 +203,7 @@ public class PostService {
 		}
 
 		postLikeRepository.save(new PostLike(loginMember, post));
-		alarmService.alert(LIKE_POST, post.getMember(), post);
+//		alarmService.alert(LIKE_POST, post.getMember(), post);
 	}
 
 	@Transactional
@@ -212,7 +211,7 @@ public class PostService {
 		final Post post = getPostWithMember(postId);
 		final Member loginMember = authUtil.getLoginMember();
 		postLikeRepository.delete(getPostLike(loginMember, post));
-		alarmService.delete(LIKE_POST, post.getMember(), post);
+//		alarmService.delete(LIKE_POST, post.getMember(), post);
 	}
 
 	public Page<LikeMemberDto> getPostLikeMembersDtoPage(Long postId, int page, int size) {
@@ -221,7 +220,7 @@ public class PostService {
 		final Pageable pageable = PageRequest.of(page, size);
 
 		Page<LikeMemberDto> likeMemberDtoPage;
-		if (post.getMember().equals(loginMember) || post.isLikeFlag()) {
+		if (post.getMember().equals(loginMember)) {
 			likeMemberDtoPage = postLikeRepository.findPostLikeMembersDtoPageExceptMeByPostIdAndMemberId(pageable,
 				postId, loginMember.getId());
 		} else {
@@ -254,22 +253,22 @@ public class PostService {
 	}
 
 
-	public Page<PostDto> getHashTagPosts(int page, int size, String name) {
-		final Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
-		return hashtagRepository.findByName(name)
-			.map(hashtag -> {
-				final List<Long> postIds = hashtagPostRepository.findAllWithPostByHashtagId(pageable, hashtag.getId())
-					.stream()
-					.map(hashtagPost -> hashtagPost.getPost().getId())
-					.collect(toList());
-				final Member loginMember = authUtil.getLoginMember();
-				final Page<PostDto> postDtoPage = postRepository.findPostDtoPageByMemberIdAndPostIdIn(pageable,
-					loginMember.getId(), postIds);
-				setContents(loginMember, postDtoPage.getContent());
-				return postDtoPage;
-			})
-			.orElse(new PageImpl<>(new ArrayList<>()));
-	}
+//	public Page<PostDto> getHashTagPosts(int page, int size, String name) {
+//		final Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
+//		return hashtagRepository.findByName(name)
+//			.map(hashtag -> {
+//				final List<Long> postIds = hashtagPostRepository.findAllWithPostByHashtagId(pageable, hashtag.getId())
+//					.stream()
+//					.map(hashtagPost -> hashtagPost.getPost().getId())
+//					.collect(toList());
+//				final Member loginMember = authUtil.getLoginMember();
+//				final Page<PostDto> postDtoPage = postRepository.findPostDtoPageByMemberIdAndPostIdIn(pageable,
+//					loginMember.getId(), postIds);
+//				setContents(loginMember, postDtoPage.getContent());
+//				return postDtoPage;
+//			})
+//			.orElse(new PageImpl<>(new ArrayList<>()));
+//	}
 
 	private void setContents(Member loginMember, List<PostDto> postDtos) {
 		final List<Long> postIds = postDtos.stream()
@@ -280,7 +279,7 @@ public class PostService {
 			.toList();
 
 		setPostImages(postDtos, postIds);
-		setRecentComments(loginMember.getId(), postDtos, postIds);
+//		setRecentComments(loginMember.getId(), postDtos, postIds);
 		setFollowingMemberUsernameLikedPost(loginMember, postDtos, postIds);
 		setMentionAndHashtagList(postDtos);
 		hidePostLikesCountIfPostLikeFlagIsFalse(loginMember, postDtos);
@@ -297,10 +296,11 @@ public class PostService {
 	private void setContentWithoutLogin(PostDto postDto) {
 		setPostImages(List.of(postDto), List.of(postDto.getPostId()));
 		setComments(postDto);
-		setMentionAndHashtagList(postDto);
-		if (postDto.isPostLikeFlag()) {
-			postDto.setPostLikesCount(0);
-		}
+		postDto.setPostLikesCount(0);
+//		setMentionAndHashtagList(postDto);
+//		if (postDto.isPostLikeFlag()) {
+//			postDto.setPostLikesCount(0);
+//		}
 	}
 
 	private void setMentionAndHashtagList(PostDto postDto) {
@@ -326,7 +326,7 @@ public class PostService {
 		});
 	}
 
-	private void validateParameters(int multipartFileSize, int altTextSize, List<PostImageTagRequest> tags) {
+	private void validateParameters(int multipartFileSize, int altTextSize) {
 		final List<FieldError> errors = new ArrayList<>();
 
 		if (multipartFileSize != altTextSize) {
@@ -334,29 +334,29 @@ public class PostService {
 				multipartFileSize + COMMA_WITH_BLANK + altTextSize, POST_IMAGES_AND_ALT_TEXTS_MISMATCH.getMessage()));
 		}
 
-		final Map<Long, List<PostImageTagRequest>> tagMapGroupByImageId = tags.stream()
-			.collect(groupingBy(PostImageTagRequest::getId));
-		for (Long imageId : tagMapGroupByImageId.keySet()) {
-			final int tagSize = tagMapGroupByImageId.get(imageId).size();
-			if (tagSize > 20) {
-				errors.add(new FieldError("postImageTags.size", String.valueOf(tagSize),
-					POST_TAGS_EXCEED.getMessage()));
-			}
-		}
+//		final Map<Long, List<PostImageTagRequest>> tagMapGroupByImageId = tags.stream()
+//			.collect(groupingBy(PostImageTagRequest::getId));
+//		for (Long imageId : tagMapGroupByImageId.keySet()) {
+//			final int tagSize = tagMapGroupByImageId.get(imageId).size();
+//			if (tagSize > 20) {
+//				errors.add(new FieldError("postImageTags.size", String.valueOf(tagSize),
+//					POST_TAGS_EXCEED.getMessage()));
+//			}
+//		}
 
-		final List<String> usernames = tags.stream()
-			.map(PostImageTagRequest::getUsername)
-			.collect(toList());
-		final Map<String, Member> usernameMap = memberRepository.findAllByUsernameIn(usernames).stream()
-			.collect(toMap(Member::getUsername, m -> m));
+//		final List<String> usernames = tags.stream()
+//			.map(PostImageTagRequest::getUsername)
+//			.collect(toList());
+//		final Map<String, Member> usernameMap = memberRepository.findAllByUsernameIn(usernames).stream()
+//			.collect(toMap(Member::getUsername, m -> m));
 
-		for (int i = 0; i < usernames.size(); i++) {
-			final String username = usernames.get(i);
-			if (!usernameMap.containsKey(username)) {
-				final String field = String.format("postImageTags[%s].username", i);
-				errors.add(new FieldError(field, username, MEMBER_NOT_FOUND.getMessage()));
-			}
-		}
+//		for (int i = 0; i < usernames.size(); i++) {
+//			final String username = usernames.get(i);
+//			if (!usernameMap.containsKey(username)) {
+//				final String field = String.format("postImageTags[%s].username", i);
+//				errors.add(new FieldError(field, username, MEMBER_NOT_FOUND.getMessage()));
+//			}
+//		}
 
 		if (!errors.isEmpty()) {
 			throw new InvalidInputException(errors);
@@ -369,7 +369,7 @@ public class PostService {
 
 	private void hidePostLikesCountIfPostLikeFlagIsFalse(Member loginMember, List<PostDto> postDtos) {
 		final Map<Long, PostDto> postDtosToHidePostLikesCountMap = postDtos.stream()
-			.filter(postDto -> !postDto.getMember().getId().equals(loginMember.getId()) && !postDto.isLikeOptionFlag())
+			.filter(postDto -> !postDto.getMember().getId().equals(loginMember.getId()))
 			.collect(toMap(PostDto::getPostId, PostDto -> PostDto));
 
 		final List<Long> postIds = new ArrayList<>(postDtosToHidePostLikesCountMap.keySet());
@@ -386,20 +386,20 @@ public class PostService {
 			.map(PostImageDto::getId)
 			.collect(toList());
 
-		setPostTags(postImageDtos, postImageIds);
+//		setPostTags(postImageDtos, postImageIds);
 
 		final Map<Long, List<PostImageDto>> postDtoMap = postImageDtos.stream()
 			.collect(groupingBy(PostImageDto::getPostId));
 		postDtos.forEach(p -> p.setPostImages(postDtoMap.get(p.getPostId())));
 	}
 
-	private void setPostTags(List<PostImageDto> postImageDtos, List<Long> postImageIds) {
-		final List<PostTagDto> postTagDtos = postTagRepository.findAllPostTagDto(postImageIds);
-
-		final Map<Long, List<PostTagDto>> postImageDtoMap = postTagDtos.stream()
-			.collect(groupingBy(PostTagDto::getPostImageId));
-		postImageDtos.forEach(i -> i.setPostTags(postImageDtoMap.get(i.getId())));
-	}
+//	private void setPostTags(List<PostImageDto> postImageDtos, List<Long> postImageIds) {
+//		final List<PostTagDto> postTagDtos = postTagRepository.findAllPostTagDto(postImageIds);
+//
+//		final Map<Long, List<PostTagDto>> postImageDtoMap = postTagDtos.stream()
+//			.collect(groupingBy(PostTagDto::getPostImageId));
+//		postImageDtos.forEach(i -> i.setPostTags(postImageDtoMap.get(i.getId())));
+//	}
 
 	private void setFollowingMemberUsernameLikedPost(Member member, List<PostDto> postDtos, List<Long> postIds) {
 		final Map<Long, List<PostLikeDto>> postLikeDtoMap =
@@ -411,25 +411,25 @@ public class PostService {
 				? postLikeDtoMap.get(postDto.getPostId()).get(ANY_INDEX).getUsername() : EMPTY));
 	}
 
-	private void setRecentComments(Long memberId, List<PostDto> postDtos, List<Long> postIds) {
-		final Map<Long, List<CommentDto>> recentCommentMap =
-			commentRepository.findAllRecentCommentDtoByMemberIdAndPostIdIn(memberId, postIds).stream()
-				.collect(groupingBy(CommentDto::getPostId));
-
-		final List<CommentDto> totalCommentDtos = new ArrayList<>();
-		postDtos.forEach(postDto -> {
-			if (recentCommentMap.containsKey(postDto.getPostId())) {
-				final List<CommentDto> commentDtos = recentCommentMap.get(postDto.getPostId());
-				totalCommentDtos.addAll(commentDtos);
-				postDto.setRecentComments(commentDtos);
-			}
-		});
-		commentService.setMentionAndHashtagList(totalCommentDtos);
-
-		final List<MemberDto> totalMemberDtos = totalCommentDtos.stream()
-			.map(CommentDto::getMember)
-			.toList();
-	}
+//	private void setRecentComments(Long memberId, List<PostDto> postDtos, List<Long> postIds) {
+//		final Map<Long, List<CommentDto>> recentCommentMap =
+//			commentRepository.findAllRecentCommentDtoByMemberIdAndPostIdIn(memberId, postIds).stream()
+//				.collect(groupingBy(CommentDto::getPostId));
+//
+//		final List<CommentDto> totalCommentDtos = new ArrayList<>();
+//		postDtos.forEach(postDto -> {
+//			if (recentCommentMap.containsKey(postDto.getPostId())) {
+//				final List<CommentDto> commentDtos = recentCommentMap.get(postDto.getPostId());
+//				totalCommentDtos.addAll(commentDtos);
+//				postDto.setRecentComments(commentDtos);
+//			}
+//		});
+//		commentService.setMentionAndHashtagList(totalCommentDtos);
+//
+//		final List<MemberDto> totalMemberDtos = totalCommentDtos.stream()
+//			.map(CommentDto::getMember)
+//			.toList();
+//	}
 
 	private void setComments(PostDto postDto) {
 		final List<CommentDto> commentDtos = commentService.getCommentDtoPageWithoutLogin(postDto.getPostId(),

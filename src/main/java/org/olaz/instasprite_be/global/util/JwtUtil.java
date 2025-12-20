@@ -44,8 +44,8 @@ public class JwtUtil {
 
     public JwtUtil(
             @Value("${jwt.secret-key}") String secret,
-            @Value("${jwt.access-token-expires}") long accessTokenValidity,  // 1 hour default
-            @Value("${jwt.refresh-token-expires}") long refreshTokenValidity  // 7 days default
+            @Value("${jwt.access-token-expires}") long accessTokenValidity,
+            @Value("${jwt.refresh-token-expires}") long refreshTokenValidity
     ) {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.accessTokenValidity = accessTokenValidity;
@@ -76,20 +76,6 @@ public class JwtUtil {
         final User principal = new User((String)claims.get(CLAIM_MEMBER_ID_KEY), "", authorities);
 
         return new JwtAuthenticationToken(principal, token, authorities);
-    }
-
-    /**
-     * Generate JWT DTO with access and refresh tokens from Authentication
-     */
-    public JwtDto generateTokenDto(UserDetails userDetails) {
-        String accessToken = generateAccessToken(userDetails);
-        String refreshToken = generateRefreshToken(userDetails.getUsername());
-
-        return JwtDto.builder()
-                .type("Bearer")
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
     }
 
     /**

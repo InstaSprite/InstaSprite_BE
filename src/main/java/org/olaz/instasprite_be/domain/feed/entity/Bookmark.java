@@ -19,13 +19,13 @@ import org.olaz.instasprite_be.domain.member.entity.Member;
 
 @Getter
 @Entity
-@Table(name = "bookmarks")
+@Table(name = "saved_post")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Bookmark {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "bookmark_id")
+	@Column(name = "saved_post_id")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)

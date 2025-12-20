@@ -241,23 +241,23 @@ public class PostController {
 		return ResponseEntity.ok(ResultResponse.of(UNBOOKMARK_POST_SUCCESS));
 	}
 
-	@Operation(summary = "Get paginated hashtag post list")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "F019 - Hashtag post list retrieved successfully"),
-		@ApiResponse(responseCode = "400", description = "G003 - Invalid input.\n"
-			+ "G004 - Invalid input type."),
-		@ApiResponse(responseCode = "401", description = "M003 - Login required."),
-	})
-	@GetMapping(POST_HASHTAGS_PATH)
-	public ResponseEntity<ResultResponse> getHashtagPosts(
-			@Parameter(description = "Page number", example = "1", required = true) @RequestParam int page,
-			@Parameter(description = "Items per page", example = "10", required = true) @RequestParam int size,
-			@Parameter(description = "Hashtag", example = "#dumpling", required = true) @NotBlank(message = "hashtag is required.") @RequestParam String hashtag) {
-		page = (page == BASE_PAGE_NUMBER ? BASE_PAGE_NUMBER : page - PAGE_ADJUSTMENT_VALUE);
-		final Page<PostDto> response = postService.getHashTagPosts(page, size, hashtag.substring(HASHTAG_PREFIX_LENGTH));
-
-		return ResponseEntity.ok(ResultResponse.of(GET_HASHTAG_POSTS_SUCCESS, response));
-	}
+//	@Operation(summary = "Get paginated hashtag post list")
+//	@ApiResponses({
+//		@ApiResponse(responseCode = "200", description = "F019 - Hashtag post list retrieved successfully"),
+//		@ApiResponse(responseCode = "400", description = "G003 - Invalid input.\n"
+//			+ "G004 - Invalid input type."),
+//		@ApiResponse(responseCode = "401", description = "M003 - Login required."),
+//	})
+//	@GetMapping(POST_HASHTAGS_PATH)
+//	public ResponseEntity<ResultResponse> getHashtagPosts(
+//			@Parameter(description = "Page number", example = "1", required = true) @RequestParam int page,
+//			@Parameter(description = "Items per page", example = "10", required = true) @RequestParam int size,
+//			@Parameter(description = "Hashtag", example = "#dumpling", required = true) @NotBlank(message = "hashtag is required.") @RequestParam String hashtag) {
+//		page = (page == BASE_PAGE_NUMBER ? BASE_PAGE_NUMBER : page - PAGE_ADJUSTMENT_VALUE);
+//		final Page<PostDto> response = postService.getHashTagPosts(page, size, hashtag.substring(HASHTAG_PREFIX_LENGTH));
+//
+//		return ResponseEntity.ok(ResultResponse.of(GET_HASHTAG_POSTS_SUCCESS, response));
+//	}
 
 	@Operation(summary = "Get most liked post")
 	@ApiResponses({

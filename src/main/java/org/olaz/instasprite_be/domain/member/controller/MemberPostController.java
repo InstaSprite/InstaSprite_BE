@@ -167,43 +167,43 @@ public class MemberPostController {
 		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_BOOKMARKED_POSTS_SUCCESS, postPage));
 	}
 
-	// ============== Tagged Posts ================
-	@Operation(summary = "Get member's 15 most recent tagged posts")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "MP005 - Retrieved member's 15 most recent tagged posts."),
-		@ApiResponse(responseCode = "400", description = "G003 - Invalid input.\n"
-			+ "G004 - Invalid input type.\n"
-			+ "M001 - User does not exist."),
-		@ApiResponse(responseCode = "401", description = "M003 - Login required.")
-	})
-	@GetMapping(ACCOUNTS_USERNAME_POSTS_TAGGED_RECENT)
-	public ResponseEntity<ResultResponse> getRecent10TaggedPosts(
-			@Parameter(description = "Username", required = true, example = "dlwlrma")
-			@PathVariable("username") String username) {
-		final List<MemberPostDto> postList = memberPostService.getMemberTaggedPostDtoPage(username,
-			FIRST_PAGE_SIZE_FOR_PROFILE, 0).getContent();
+//	// ============== Tagged Posts ================
+//	@Operation(summary = "Get member's 15 most recent tagged posts")
+//	@ApiResponses({
+//		@ApiResponse(responseCode = "200", description = "MP005 - Retrieved member's 15 most recent tagged posts."),
+//		@ApiResponse(responseCode = "400", description = "G003 - Invalid input.\n"
+//			+ "G004 - Invalid input type.\n"
+//			+ "M001 - User does not exist."),
+//		@ApiResponse(responseCode = "401", description = "M003 - Login required.")
+//	})
+//	@GetMapping(ACCOUNTS_USERNAME_POSTS_TAGGED_RECENT)
+//	public ResponseEntity<ResultResponse> getRecent10TaggedPosts(
+//			@Parameter(description = "Username", required = true, example = "dlwlrma")
+//			@PathVariable("username") String username) {
+//		final List<MemberPostDto> postList = memberPostService.getMemberTaggedPostDtoPage(username,
+//			FIRST_PAGE_SIZE_FOR_PROFILE, 0).getContent();
+//
+//		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MEMBER_TAGGED_POSTS_SUCCESS, postList));
+//	}
 
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MEMBER_TAGGED_POSTS_SUCCESS, postList));
-	}
-
-	@Operation(summary = "Get member's tagged posts with pagination (infinite scroll)")
-	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "MP006 - Retrieved member's tagged posts."),
-		@ApiResponse(responseCode = "400", description = "G003 - Invalid input.\n"
-			+ "G004 - Invalid input type.\n"
-			+ "M001 - User does not exist."),
-		@ApiResponse(responseCode = "401", description = "M003 - Login required.")
-	})
-	@GetMapping(ACCOUNTS_USERNAME_POSTS_TAGGED)
-	public ResponseEntity<ResultResponse> getTaggedPostPage(
-			@Parameter(description = "Username", required = true, example = "dlwlrma")
-			@PathVariable("username") String username,
-			@Parameter(description = "Page number", required = true, example = "1")
-			@Min(1) @RequestParam int page) {
-		final Page<MemberPostDto> postPage = memberPostService.getMemberTaggedPostDtoPage(username,
-			PAGE_SIZE_FOR_PROFILE, page + PAGE_OFFSET_FOR_PROFILE);
-
-		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MEMBER_TAGGED_POSTS_SUCCESS, postPage));
-	}
+//	@Operation(summary = "Get member's tagged posts with pagination (infinite scroll)")
+//	@ApiResponses({
+//		@ApiResponse(responseCode = "200", description = "MP006 - Retrieved member's tagged posts."),
+//		@ApiResponse(responseCode = "400", description = "G003 - Invalid input.\n"
+//			+ "G004 - Invalid input type.\n"
+//			+ "M001 - User does not exist."),
+//		@ApiResponse(responseCode = "401", description = "M003 - Login required.")
+//	})
+//	@GetMapping(ACCOUNTS_USERNAME_POSTS_TAGGED)
+//	public ResponseEntity<ResultResponse> getTaggedPostPage(
+//			@Parameter(description = "Username", required = true, example = "dlwlrma")
+//			@PathVariable("username") String username,
+//			@Parameter(description = "Page number", required = true, example = "1")
+//			@Min(1) @RequestParam int page) {
+//		final Page<MemberPostDto> postPage = memberPostService.getMemberTaggedPostDtoPage(username,
+//			PAGE_SIZE_FOR_PROFILE, page + PAGE_OFFSET_FOR_PROFILE);
+//
+//		return ResponseEntity.ok(ResultResponse.of(ResultCode.GET_MEMBER_TAGGED_POSTS_SUCCESS, postPage));
+//	}
 
 }

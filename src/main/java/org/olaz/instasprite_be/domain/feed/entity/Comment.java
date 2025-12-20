@@ -30,7 +30,7 @@ import org.olaz.instasprite_be.domain.member.entity.Member;
 
 @Getter
 @Entity
-@Table(name = "comments")
+@Table(name = "comment")
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
@@ -59,7 +59,7 @@ public class Comment {
 	private String content;
 
 	@CreatedDate
-	@Column(name = "comment_upload_date")
+	@Column(name = "comment_posted_at")
 	private LocalDateTime uploadDate;
 
 	@OneToMany(mappedBy = "comment")

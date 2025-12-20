@@ -19,7 +19,7 @@ import org.olaz.instasprite_be.domain.member.entity.Member;
 
 @Getter
 @Entity
-@Table(name = "post_likes")
+@Table(name = "post_like")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PostLike {
 

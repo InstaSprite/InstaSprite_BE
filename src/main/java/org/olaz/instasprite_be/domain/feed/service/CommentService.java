@@ -1,6 +1,6 @@
 package org.olaz.instasprite_be.domain.feed.service;
 
-import static org.olaz.instasprite_be.domain.alarm.dto.AlarmType.*;
+//import static org.olaz.instasprite_be.domain.alarm.dto.AlarmType.*;
 import static org.olaz.instasprite_be.global.error.ErrorCode.*;
 import static java.util.stream.Collectors.*;
 
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import org.olaz.instasprite_be.domain.alarm.service.AlarmService;
+//import org.olaz.instasprite_be.domain.alarm.service.AlarmService;
 import org.olaz.instasprite_be.domain.feed.dto.CommentDto;
 import org.olaz.instasprite_be.domain.feed.dto.CommentUploadRequest;
 import org.olaz.instasprite_be.domain.feed.dto.CommentUploadResponse;
@@ -31,12 +31,12 @@ import org.olaz.instasprite_be.domain.feed.repository.CommentLikeRepository;
 import org.olaz.instasprite_be.domain.feed.repository.CommentRepository;
 import org.olaz.instasprite_be.domain.feed.repository.PostLikeRepository;
 import org.olaz.instasprite_be.domain.feed.repository.PostRepository;
-import org.olaz.instasprite_be.domain.hashtag.service.HashtagService;
+//import org.olaz.instasprite_be.domain.hashtag.service.HashtagService;
 import org.olaz.instasprite_be.domain.member.dto.LikeMemberDto;
 import org.olaz.instasprite_be.domain.member.dto.MemberDto;
 import org.olaz.instasprite_be.domain.member.entity.Member;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
-import org.olaz.instasprite_be.domain.mention.service.MentionService;
+//import org.olaz.instasprite_be.domain.mention.service.MentionService;
 import org.olaz.instasprite_be.global.error.exception.EntityAlreadyExistException;
 import org.olaz.instasprite_be.global.error.exception.EntityNotFoundException;
 import org.olaz.instasprite_be.global.util.AuthUtil;
@@ -52,11 +52,11 @@ public class CommentService {
 	private final CommentRepository commentRepository;
 	private final PostLikeRepository postLikeRepository;
 	private final CommentLikeRepository commentLikeRepository;
-	private final AlarmService alarmService;
-	private final HashtagService hashtagService;
+//	private final AlarmService alarmService;
+//	private final HashtagService hashtagService;
 	private final CommentLikeService commentLikeService;
-	private final RecentCommentService recentCommentService;
-	private final MentionService mentionService;
+//	private final RecentCommentService recentCommentService;
+//	private final MentionService mentionService;
 	private final StringExtractUtil stringExtractUtil;
 	private final MemberRepository memberRepository;
 
@@ -75,14 +75,14 @@ public class CommentService {
 			new Comment(isRootComment ? null : parent.get(), loginMember, post, request.getContent()));
 
 		if (isRootComment) {
-			recentCommentService.updateByUploadingComment(post, loginMember, comment);
+//			recentCommentService.updateByUploadingComment(post, loginMember, comment);
 		} else if (parent.get().getParent() != null) {
 			throw new CantUploadReplyException();
 		}
 
-		hashtagService.registerHashtags(post, comment);
-		mentionService.mentionMembers(loginMember, comment);
-		alarmService.alert(COMMENT, post.getMember(), post, comment);
+//		hashtagService.registerHashtags(post, comment);
+//		mentionService.mentionMembers(loginMember, comment);
+//		alarmService.alert(COMMENT, post.getMember(), post, comment);
 
 		final CommentDto commentDto = new CommentDto(
 			comment.getId(),
@@ -111,15 +111,15 @@ public class CommentService {
 			comments.addAll(commentRepository.findAllByParent(comment));
 		}
 
-		alarmService.deleteAll(comments);
-		hashtagService.unregisterHashtagsByDeletingComments(comment.getPost(), comments);
-		mentionService.deleteAll(comments);
+//		alarmService.deleteAll(comments);
+//		hashtagService.unregisterHashtagsByDeletingComments(comment.getPost(), comments);
+//		mentionService.deleteAll(comments);
 		commentLikeService.deleteAll(comments);
 		commentRepository.deleteAll(comments.subList(1, comments.size()));
 
-		if (isRootComment) {
-			recentCommentService.updateByDeletingComment(loginMember, comment.getPost(), comment);
-		}
+//		if (isRootComment) {
+//			recentCommentService.updateByDeletingComment(loginMember, comment.getPost(), comment);
+//		}
 
 		commentRepository.delete(comment);
 	}
@@ -181,7 +181,7 @@ public class CommentService {
 			throw new EntityAlreadyExistException(COMMENT_LIKE_ALREADY_EXIST);
 
 		commentLikeRepository.save(new CommentLike(loginMember, comment));
-		alarmService.alert(LIKE_COMMENT, comment.getMember(), comment.getPost(), comment);
+//		alarmService.alert(LIKE_COMMENT, comment.getMember(), comment.getPost(), comment);
 	}
 
 	@Transactional
@@ -190,7 +190,7 @@ public class CommentService {
 		final Member loginMember = authUtil.getLoginMember();
 		final CommentLike commentLike = getCommentLike(loginMember, comment);
 		commentLikeRepository.delete(commentLike);
-		alarmService.delete(LIKE_COMMENT, comment.getMember(), comment);
+//		alarmService.delete(LIKE_COMMENT, comment.getMember(), comment);
 	}
 
 	public Page<LikeMemberDto> getCommentLikeMembersDtoPage(Long commentId, int page, int size) {
@@ -220,7 +220,7 @@ public class CommentService {
 	public void deleteAllInPost(Post post) {
 		final List<Comment> comments = commentRepository.findAllByPost(post);
 		commentLikeService.deleteAll(comments);
-		recentCommentService.deleteAll(post);
+//		recentCommentService.deleteAll(post);
 	}
 
 	public void setMentionAndHashtagList(List<CommentDto> commentDtos) {

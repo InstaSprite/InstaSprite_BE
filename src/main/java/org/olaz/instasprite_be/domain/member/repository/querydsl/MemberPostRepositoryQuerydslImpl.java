@@ -4,7 +4,7 @@ import static org.olaz.instasprite_be.domain.feed.entity.QBookmark.*;
 import static org.olaz.instasprite_be.domain.feed.entity.QPost.*;
 import static org.olaz.instasprite_be.domain.feed.entity.QPostImage.*;
 import static org.olaz.instasprite_be.domain.feed.entity.QPostLike.*;
-import static org.olaz.instasprite_be.domain.feed.entity.QPostTag.*;
+//import static org.olaz.instasprite_be.domain.feed.entity.QPostTag.*;
 import static org.olaz.instasprite_be.domain.member.entity.QMember.*;
 
 import java.util.List;
@@ -34,7 +34,7 @@ public class MemberPostRepositoryQuerydslImpl implements MemberPostRepositoryQue
 				post.id,
 				post.member,
 				post.postImages.size().gt(1),
-				post.likeFlag,
+//				post.likeFlag,
 				existPostLikeWherePostEqAndMemberIdEq(loginMemberId),
 				post.comments.size(),
 				post.postLikes.size()))
@@ -61,7 +61,7 @@ public class MemberPostRepositoryQuerydslImpl implements MemberPostRepositoryQue
 				bookmark.post.id,
 				bookmark.post.member,
 				bookmark.post.postImages.size().gt(1),
-				post.likeFlag,
+//				post.likeFlag,
 				existPostLikeWherePostEqAndMemberIdEq(loginMemberId),
 				bookmark.post.comments.size(),
 				bookmark.post.postLikes.size()))
@@ -82,34 +82,34 @@ public class MemberPostRepositoryQuerydslImpl implements MemberPostRepositoryQue
 		return new PageImpl<>(posts, pageable, total);
 	}
 
-	@Override
-	public Page<MemberPostDto> findMemberTaggedPostDtoPageByLoginMemberIdAndTargetUsername(Long loginMemberId, String username, Pageable pageable) {
-		final List<MemberPostDto> posts = queryFactory
-			.select(new QMemberPostDto(
-				postTag.postImage.post.id,
-				postTag.postImage.post.member,
-				postTag.postImage.post.postImages.size().gt(1),
-				postTag.postImage.post.likeFlag,
-				existPostLikeWherePostEqAndMemberIdEq(loginMemberId),
-				postTag.postImage.post.comments.size(),
-				postTag.postImage.post.postLikes.size()))
-			.from(postTag)
-			.innerJoin(postTag.postImage, postImage)
-			.innerJoin(postTag.postImage.post, post)
-			.innerJoin(postTag.postImage.post.member, member)
-			.where(postTag.tag.username.eq(username))
-			.offset(pageable.getOffset())
-			.limit(pageable.getPageSize())
-			.orderBy(postTag.postImage.post.id.desc())
-			.distinct()
-			.fetch();
-
-		final long total = queryFactory
-			.selectFrom(postTag)
-			.where(postTag.tag.username.eq(username))
-			.fetch().size();
-		return new PageImpl<>(posts, pageable, total);
-	}
+//	@Override
+//	public Page<MemberPostDto> findMemberTaggedPostDtoPageByLoginMemberIdAndTargetUsername(Long loginMemberId, String username, Pageable pageable) {
+//		final List<MemberPostDto> posts = queryFactory
+//			.select(new QMemberPostDto(
+//				postTag.postImage.post.id,
+//				postTag.postImage.post.member,
+//				postTag.postImage.post.postImages.size().gt(1),
+//				postTag.postImage.post.likeFlag,
+//				existPostLikeWherePostEqAndMemberIdEq(loginMemberId),
+//				postTag.postImage.post.comments.size(),
+//				postTag.postImage.post.postLikes.size()))
+//			.from(postTag)
+//			.innerJoin(postTag.postImage, postImage)
+//			.innerJoin(postTag.postImage.post, post)
+//			.innerJoin(postTag.postImage.post.member, member)
+//			.where(postTag.tag.username.eq(username))
+//			.offset(pageable.getOffset())
+//			.limit(pageable.getPageSize())
+//			.orderBy(postTag.postImage.post.id.desc())
+//			.distinct()
+//			.fetch();
+//
+//		final long total = queryFactory
+//			.selectFrom(postTag)
+//			.where(postTag.tag.username.eq(username))
+//			.fetch().size();
+//		return new PageImpl<>(posts, pageable, total);
+//	}
 
 	private BooleanExpression existPostLikeWherePostEqAndMemberIdEq(Long id) {
 		return JPAExpressions

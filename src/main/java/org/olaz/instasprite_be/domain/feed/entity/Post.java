@@ -47,7 +47,7 @@ public class Post {
 	private String content;
 
 	@CreatedDate
-	@Column(name = "post_upload_date")
+	@Column(name = "post_uploaded_at")
 	private LocalDateTime uploadDate;
 
 	@OneToMany(mappedBy = "post")
@@ -62,18 +62,15 @@ public class Post {
 	@OneToMany(mappedBy = "post")
 	private List<PostImage> postImages = new ArrayList<>();
 
-	@Column(name = "post_comment_flag")
+	@Column(name = "post_comments_enabled")
 	private boolean commentFlag;
 
-	@Column(name = "post_like_flag")
-	private boolean likeFlag;
 
 	@Builder
-	public Post(Member member, String content, boolean commentFlag, boolean likeFlag) {
+	public Post(Member member, String content, boolean commentFlag) {
 		this.member = member;
 		this.content = content;
 		this.commentFlag = commentFlag;
-		this.likeFlag = likeFlag;
 	}
 
 }

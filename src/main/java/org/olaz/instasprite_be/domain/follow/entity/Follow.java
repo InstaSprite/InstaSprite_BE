@@ -33,7 +33,7 @@ public class Follow {
 	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "follow_member_id")
+	@JoinColumn(name = "follower_member_id")
 	private Member followMember;
 
 	@Builder

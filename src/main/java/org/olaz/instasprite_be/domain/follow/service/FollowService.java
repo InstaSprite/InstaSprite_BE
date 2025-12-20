@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.olaz.instasprite_be.domain.alarm.service.AlarmService;
+//import org.olaz.instasprite_be.domain.alarm.service.AlarmService;
 import org.olaz.instasprite_be.domain.follow.dto.FollowerDto;
 import org.olaz.instasprite_be.domain.follow.entity.Follow;
 import org.olaz.instasprite_be.domain.follow.exception.FollowMyselfFailException;
@@ -19,7 +19,7 @@ import org.olaz.instasprite_be.domain.follow.exception.UnfollowFailException;
 import org.olaz.instasprite_be.domain.follow.exception.UnfollowMyselfFailException;
 import org.olaz.instasprite_be.domain.follow.repository.FollowRepository;
 import org.olaz.instasprite_be.domain.member.entity.Member;
-import org.olaz.instasprite_be.domain.member.repository.BlockRepository;
+//import org.olaz.instasprite_be.domain.member.repository.BlockRepository;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
 import org.olaz.instasprite_be.global.error.ErrorCode;
 import org.olaz.instasprite_be.global.error.exception.EntityAlreadyExistException;
@@ -33,8 +33,8 @@ public class FollowService {
 
 	private final FollowRepository followRepository;
 	private final MemberRepository memberRepository;
-	private final BlockRepository blockRepository;
-	private final AlarmService alarmService;
+//	private final BlockRepository blockRepository;
+//	private final AlarmService alarmService;
 	private final AuthUtil authUtil;
 
 	@Transactional
@@ -52,17 +52,17 @@ public class FollowService {
 			throw new EntityAlreadyExistException(ErrorCode.FOLLOW_ALREADY_EXIST);
 		}
 
-		if (blockRepository.existsByMemberIdAndBlockMemberId(followMember.getId(), member.getId())) {
-			return false;
-		}
+//		if (blockRepository.existsByMemberIdAndBlockMemberId(followMember.getId(), member.getId())) {
+//			return false;
+//		}
 
 
-		blockRepository.findByMemberIdAndBlockMemberId(member.getId(), followMember.getId())
-			.ifPresent(blockRepository::delete);
+//		blockRepository.findByMemberIdAndBlockMemberId(member.getId(), followMember.getId())
+//			.ifPresent(blockRepository::delete);
 
 		final Follow follow = new Follow(member, followMember);
 		followRepository.save(follow);
-		alarmService.alert(followMember, follow);
+//		alarmService.alert(followMember, follow);
 
 		return true;
 	}
@@ -78,7 +78,7 @@ public class FollowService {
 		final Follow follow = followRepository
 			.findByMemberIdAndFollowMemberId(memberId, followMember.getId())
 			.orElseThrow(UnfollowFailException::new);
-		alarmService.delete(followMember, follow);
+//		alarmService.delete(followMember, follow);
 		followRepository.delete(follow);
 
 		return true;

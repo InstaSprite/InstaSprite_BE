@@ -11,6 +11,6 @@ public interface MemberPostRepositoryQuerydsl {
 
 	Page<MemberPostDto> findMemberSavedPostDtoPageByLoginMemberId(Long loginMemberId, Pageable pageable);
 
-	Page<MemberPostDto> findMemberTaggedPostDtoPageByLoginMemberIdAndTargetUsername(Long loginMemberId, String username, Pageable pageable);
+//	Page<MemberPostDto> findMemberTaggedPostDtoPageByLoginMemberIdAndTargetUsername(Long loginMemberId, String username, Pageable pageable);
 
 }

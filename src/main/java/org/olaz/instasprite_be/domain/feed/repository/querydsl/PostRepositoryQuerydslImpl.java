@@ -4,8 +4,7 @@ import static org.olaz.instasprite_be.domain.feed.entity.QBookmark.*;
 import static org.olaz.instasprite_be.domain.feed.entity.QPost.*;
 import static org.olaz.instasprite_be.domain.feed.entity.QPostLike.*;
 import static org.olaz.instasprite_be.domain.follow.entity.QFollow.*;
-import static org.olaz.instasprite_be.domain.follow.entity.QHashtagFollow.*;
-import static org.olaz.instasprite_be.domain.hashtag.entity.QHashtagPost.*;
+//import static org.olaz.instasprite_be.domain.hashtag.entity.QHashtagPost.*;
 import static org.olaz.instasprite_be.domain.member.entity.QMember.*;
 
 import java.util.List;
@@ -45,13 +44,11 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				isExistBookmarkWherePostEqMemberIdEq(memberId),
 				isExistPostLikeWherePostEqAndMemberIdEq(memberId),
 				post.commentFlag,
-				post.likeFlag,
 				isFollowing(memberId)
 			))
 			.from(post)
 			.innerJoin(post.member, member)
-			.where(post.member.id.in(getFollowingMemberIdsByMemberId(memberId))
-				.or(post.id.in(getPostIdsOfFollowingHashtagByMemberId(memberId))))
+			.where(post.member.id.in(getFollowingMemberIdsByMemberId(memberId)))
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.orderBy(post.id.desc())
@@ -61,9 +58,9 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 		final long total = queryFactory
 			.selectFrom(post)
 			.innerJoin(post.member, member)
-			.where(post.member.id.in(getFollowingMemberIdsByMemberId(memberId))
-				.or(post.id.in(getPostIdsOfFollowingHashtagByMemberId(memberId))))
-			.fetchCount();
+			.where(post.member.id.in(getFollowingMemberIdsByMemberId(memberId)))
+			.fetch()
+			.size();
 
 		return new PageImpl<>(postDtos, pageable, total);
 	}
@@ -81,7 +78,7 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				isExistBookmarkWherePostEqMemberIdEq(memberId),
 				isExistPostLikeWherePostEqAndMemberIdEq(memberId),
 				post.commentFlag,
-				post.likeFlag,
+//				post.likeFlag,
 				isFollowing(memberId)
 			))
 			.from(post)
@@ -99,8 +96,8 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				post.member,
 				post.comments.size(),
 				post.postLikes.size(),
-				post.commentFlag,
-				post.likeFlag
+				post.commentFlag
+//				post.likeFlag
 			))
 			.from(post)
 			.where(post.id.eq(postId))
@@ -120,7 +117,7 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				isExistBookmarkWherePostEqMemberIdEq(memberId),
 				isExistPostLikeWherePostEqAndMemberIdEq(memberId),
 				post.commentFlag,
-				post.likeFlag,
+//				post.likeFlag,
 				isFollowing(memberId)
 			))
 			.from(post)
@@ -147,8 +144,8 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				post.member,
 				post.comments.size(),
 				post.postLikes.size(),
-				post.commentFlag,
-				post.likeFlag
+				post.commentFlag
+//				post.likeFlag
 			))
 			.from(post)
 			.innerJoin(post.member, member)
@@ -192,14 +189,14 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 			.where(follow.member.id.eq(memberId));
 	}
 
-	private JPQLQuery<Long> getPostIdsOfFollowingHashtagByMemberId(Long memberId) {
-		return JPAExpressions
-			.select(hashtagPost.post.id)
-			.from(hashtagPost)
-			.join(hashtagFollow).on(hashtagFollow.member.id.eq(memberId)
-				.and(hashtagFollow.hashtag.id.eq(hashtagPost.hashtag.id)))
-			.innerJoin(hashtagPost.post, post).on(hashtagPost.post.member.id.ne(memberId));
-	}
+//	private JPQLQuery<Long> getPostIdsOfFollowingHashtagByMemberId(Long memberId) {
+//		return JPAExpressions
+//			.select(hashtagPost.post.id)
+//			.from(hashtagPost)
+//			.join(hashtagFollow).on(hashtagFollow.member.id.eq(memberId)
+//				.and(hashtagFollow.hashtag.id.eq(hashtagPost.hashtag.id)))
+//			.innerJoin(hashtagPost.post, post).on(hashtagPost.post.member.id.ne(memberId));
+//	}
 
 	@Override
 	public Optional<PostDto> findMostLikedPostDto() {
@@ -214,7 +211,7 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				Expressions.constant(false), // postBookmarkFlag - not needed for widget
 				Expressions.constant(false), // postLikeFlag - not needed for widget
 				post.commentFlag,
-				post.likeFlag,
+//				post.likeFlag,
 				Expressions.constant(false) // isFollowing - not needed for widget
 			))
 			.from(post)

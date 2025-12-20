@@ -9,7 +9,7 @@ import org.olaz.instasprite_be.domain.feed.dto.CommentDto;
 
 public interface CommentRepositoryQuerydsl {
 
-	List<CommentDto> findAllRecentCommentDtoByMemberIdAndPostIdIn(Long memberId, List<Long> postIds);
+//	List<CommentDto> findAllRecentCommentDtoByMemberIdAndPostIdIn(Long memberId, List<Long> postIds);
 
 	Page<CommentDto> findCommentDtoPageByMemberIdAndPostId(Long memberId, Long postId, Pageable pageable);
 

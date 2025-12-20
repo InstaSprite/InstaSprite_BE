@@ -23,19 +23,18 @@ public class PostImageService {
 
 	private final ImageUploader uploader;
 	private final PostImageRepository postImageRepository;
-	private final PostTagService postTagService;
+//	private final PostTagService postTagService;
 
 	@Transactional
 	public void deleteAll(Post post) {
 		final List<PostImage> postImages = postImageRepository.findAllByPost(post);
 		postImages.forEach(pi -> uploader.deleteImage(pi.getImage(), "post"));
-		postTagService.deleteAll(postImages);
+//		postTagService.deleteAll(postImages);
 		postImageRepository.deleteAllInBatch(postImages);
 	}
 
 	@Transactional
-	public void saveAll(Post post, List<MultipartFile> multipartFiles, List<String> altTexts,
-		List<PostImageTagRequest> tags) {
+	public void saveAll(Post post, List<MultipartFile> multipartFiles, List<String> altTexts) {
 		final List<Image> images = multipartFiles.stream()
 			.map(pi -> uploader.uploadImage(pi, "post"))
 			.collect(Collectors.toList());
@@ -45,23 +44,23 @@ public class PostImageService {
 			post.getPostImages().add(new PostImage(post, images.get(i), altTexts.get(i)));
 		}
 
-		if (!tags.isEmpty()) {
-			linkWithTags(tags, post);
-		}
-		postTagService.saveAll(tags);
+//		if (!tags.isEmpty()) {
+//			linkWithTags(tags, post);
+//		}
+//		postTagService.saveAll(tags);
 	}
 
-	private void linkWithTags(List<PostImageTagRequest> postImageTags, Post post) {
-		final List<Long> postImageIds = postImageRepository.findAllByPost(post).stream()
-			.map(PostImage::getId)
-			.toList();
-		int idx = postImageTags.get(0).getId().intValue();
-
-		for (PostImageTagRequest postImageTag : postImageTags) {
-			if (idx != postImageTag.getId())
-				idx = postImageTag.getId().intValue();
-			postImageTag.setId(postImageIds.get(idx));
-		}
-	}
+//	private void linkWithTags(List<PostImageTagRequest> postImageTags, Post post) {
+//		final List<Long> postImageIds = postImageRepository.findAllByPost(post).stream()
+//			.map(PostImage::getId)
+//			.toList();
+//		int idx = postImageTags.get(0).getId().intValue();
+//
+//		for (PostImageTagRequest postImageTag : postImageTags) {
+//			if (idx != postImageTag.getId())
+//				idx = postImageTag.getId().intValue();
+//			postImageTag.setId(postImageIds.get(idx));
+//		}
+//	}
 
 }

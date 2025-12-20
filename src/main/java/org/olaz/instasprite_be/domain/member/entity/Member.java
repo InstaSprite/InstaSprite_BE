@@ -13,7 +13,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -32,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "members")
+@Table(name = "member")
 public class Member {
 
     @Id
@@ -43,7 +42,7 @@ public class Member {
     @Column(name = "member_username", nullable = false, length = 20, unique = true)
     private String username;
 
-    @Column(name = "google_id", unique = true)
+    @Column(name = "member_google_id", unique = true)
     private String googleId;
 
     @Column(name = "member_role")
@@ -53,10 +52,10 @@ public class Member {
     @Column(name = "member_name", nullable = false, length = 20)
     private String name;
 
-    @Column(name = "member_introduce", columnDefinition = "TEXT")
+    @Column(name = "member_bio", columnDefinition = "TEXT")
     private String introduce;
 
-    @Column(name = "email")
+    @Column(name = "member_email")
     private String email;
 
     @OneToMany(mappedBy = "member")

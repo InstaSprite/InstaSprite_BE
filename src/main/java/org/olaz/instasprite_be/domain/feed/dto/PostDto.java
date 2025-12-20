@@ -34,9 +34,8 @@ public class PostDto {
 	@Setter
     private long postLikesCount;
 	private boolean postBookmarkFlag;
-	private boolean postLikeFlag;
+//	private boolean postLikeFlag;
 	private boolean commentOptionFlag;
-	private boolean likeOptionFlag;
 	private boolean isFollowing;
 	@Setter
     private String followingMemberUsernameLikedPost = EMPTY;
@@ -46,7 +45,7 @@ public class PostDto {
 	@QueryProjection
 	public PostDto(Long postId, String postContent, LocalDateTime postUploadDate, Member member, int postCommentsCount,
 		int postLikesCount, boolean postBookmarkFlag, boolean postLikeFlag, boolean commentOptionFlag,
-		boolean likeOptionFlag, boolean isFollowing) {
+		 boolean isFollowing) {
 		this.postId = postId;
 		this.postContent = postContent;
 		this.postUploadDate = postUploadDate;
@@ -54,15 +53,14 @@ public class PostDto {
 		this.postCommentsCount = postCommentsCount;
 		this.postLikesCount = postLikesCount;
 		this.postBookmarkFlag = postBookmarkFlag;
-		this.postLikeFlag = postLikeFlag;
+//		this.postLikeFlag = postLikeFlag;
 		this.commentOptionFlag = commentOptionFlag;
-		this.likeOptionFlag = likeOptionFlag;
 		this.isFollowing = isFollowing;
 	}
 
 	@QueryProjection
 	public PostDto(Long postId, String postContent, LocalDateTime postUploadDate, Member member, int postCommentsCount,
-		int postLikesCount, boolean commentOptionFlag, boolean likeOptionFlag) {
+		int postLikesCount, boolean commentOptionFlag) {
 		this.postId = postId;
 		this.postContent = postContent;
 		this.postUploadDate = postUploadDate;
@@ -70,9 +68,8 @@ public class PostDto {
 		this.postCommentsCount = postCommentsCount;
 		this.postLikesCount = postLikesCount;
 		this.postBookmarkFlag = false;
-		this.postLikeFlag = false;
+//		this.postLikeFlag = false;
 		this.commentOptionFlag = commentOptionFlag;
-		this.likeOptionFlag = likeOptionFlag;
 		this.isFollowing = false;
 	}
 

@@ -34,16 +34,16 @@ public class PostUploadRequest {
 	@Size(min = 1, message = "Post image alt text is required.")
 	private List<@NotBlank(message = "Post image alt text is required.") String> altTexts;
 
-	@Schema(description = "Post image user tags")
-	@Valid
-	private List<PostImageTagRequest> postImageTags = new ArrayList<>();
+//	@Schema(description = "Post image user tags")
+//	@Valid
+//	private List<PostImageTagRequest> postImageTags = new ArrayList<>();
 
 	@Schema(description = "Comment feature enabled", required = true, example = "true")
 	@NotNull(message = "Comment feature flag is required.")
 	private boolean commentFlag;
 
-	@Schema(description = "Like count visibility", required = true, example = "true")
-	@NotNull(message = "Like visibility flag is required.")
-	private boolean likeFlag;
+//	@Schema(description = "Like count visibility", required = true, example = "true")
+//	@NotNull(message = "Like visibility flag is required.")
+//	private boolean likeFlag;
 
 }

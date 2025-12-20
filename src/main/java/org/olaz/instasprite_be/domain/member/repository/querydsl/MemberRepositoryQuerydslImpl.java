@@ -2,7 +2,7 @@ package org.olaz.instasprite_be.domain.member.repository.querydsl;
 
 import static org.olaz.instasprite_be.domain.feed.entity.QPost.*;
 import static org.olaz.instasprite_be.domain.follow.entity.QFollow.*;
-import static org.olaz.instasprite_be.domain.member.entity.QBlock.*;
+//import static org.olaz.instasprite_be.domain.member.entity.QBlock.*;
 import static org.olaz.instasprite_be.domain.member.entity.QMember.*;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -31,8 +31,8 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl {
 				member.image,
 				isFollowing(loginMemberId, username),
 				isFollower(loginMemberId, username),
-				isBlocking(loginMemberId, username),
-				isBlocked(loginMemberId, username),
+//				isBlocking(loginMemberId, username),
+//				isBlocked(loginMemberId, username),
 				member.introduce,
 				getPostCount(username),
 				getFollowingCount(username),
@@ -52,8 +52,8 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl {
 				member.image,
 				isFollowing(loginMemberId, username),
 				isFollower(loginMemberId, username),
-				isBlocking(loginMemberId, username),
-				isBlocked(loginMemberId, username),
+//				isBlocking(loginMemberId, username),
+//				isBlocked(loginMemberId, username),
 				getPostCount(username),
 				getFollowingCount(username),
 				getFollowerCount(username),
@@ -100,20 +100,20 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl {
 			.exists();
 	}
 
-	private BooleanExpression isBlocking(Long loginUserId, String targetUsername) {
-		return JPAExpressions
-			.selectFrom(block)
-			.where(block.member.id.eq(loginUserId)
-				.and(block.blockMember.username.eq(targetUsername)))
-			.exists();
-	}
+//	private BooleanExpression isBlocking(Long loginUserId, String targetUsername) {
+//		return JPAExpressions
+//			.selectFrom(block)
+//			.where(block.member.id.eq(loginUserId)
+//				.and(block.blockMember.username.eq(targetUsername)))
+//			.exists();
+//	}
 
-	private BooleanExpression isBlocked(Long loginUserId, String targetUsername) {
-		return JPAExpressions
-			.selectFrom(block)
-			.where(block.member.username.eq(targetUsername).and(
-				block.blockMember.id.eq(loginUserId)))
-			.exists();
-	}
+//	private BooleanExpression isBlocked(Long loginUserId, String targetUsername) {
+//		return JPAExpressions
+//			.selectFrom(block)
+//			.where(block.member.username.eq(targetUsername).and(
+//				block.blockMember.id.eq(loginUserId)))
+//			.exists();
+//	}
 
 }

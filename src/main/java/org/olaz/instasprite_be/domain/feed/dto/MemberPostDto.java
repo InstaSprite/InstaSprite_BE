@@ -3,10 +3,7 @@ package org.olaz.instasprite_be.domain.feed.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.querydsl.core.annotations.QueryProjection;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import org.olaz.instasprite_be.domain.member.dto.MemberDto;
 import org.olaz.instasprite_be.domain.member.entity.Member;
@@ -19,25 +16,27 @@ public class MemberPostDto {
 
 	@JsonIgnore
 	private MemberDto member;
-	private PostImageDto postImage;
+	@Setter
+    private PostImageDto postImage;
 	private boolean hasManyPostImages;
 
-	@JsonIgnore
-	private boolean likeOptionFlag;
+//	@JsonIgnore
+//	private boolean likeOptionFlag;
 
 	@JsonIgnore
 	private boolean postLikeFlag;
 	private int postCommentsCount;
-	private int postLikesCount;
+	@Setter
+    private int postLikesCount;
 
 	@Builder
 	@QueryProjection
-	public MemberPostDto(Long postId, Member member, boolean hasManyPostImages, boolean likeOptionFlag, boolean postLikeFlag,
+	public MemberPostDto(Long postId, Member member, boolean hasManyPostImages, boolean postLikeFlag,
 		int postCommentsCount, int postLikesCount) {
 		this.postId = postId;
 		this.member = new MemberDto(member);
 		this.hasManyPostImages = hasManyPostImages;
-		this.likeOptionFlag = likeOptionFlag;
+//		this.likeOptionFlag = likeOptionFlag;
 		this.postLikeFlag = postLikeFlag;
 		this.postCommentsCount = postCommentsCount;
 		this.postLikesCount = postLikesCount;
@@ -50,14 +49,6 @@ public class MemberPostDto {
 		this.member = new MemberDto(member);
 		this.hasManyPostImages = hasManyPostImages;
 		this.postCommentsCount = postCommentsCount;
-		this.postLikesCount = postLikesCount;
-	}
-
-	public void setPostImage(PostImageDto postImageDto) {
-		this.postImage = postImageDto;
-	}
-
-	public void setPostLikesCount(int postLikesCount) {
 		this.postLikesCount = postLikesCount;
 	}
 

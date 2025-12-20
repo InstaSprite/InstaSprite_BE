@@ -88,7 +88,7 @@ public enum ErrorCode {
     EMAIL_SEND_FAIL(500, "E001", "Error occurred while sending email."),
 
     // HashTag
-    HASHTAG_NOT_FOUND(400, "H001", "Hashtag does not exist."),
+//    HASHTAG_NOT_FOUND(400, "H001", "Hashtag does not exist."),
     HASHTAG_FOLLOW_ALREADY_EXIST(400, "H002", "Hashtag already followed."),
     HASHTAG_FOLLOW_NOT_FOUND(400, "H003", "Hashtag has not been followed yet."),
     HASHTAG_PREFIX_MISMATCH(400, "H004", "Hashtag must start with #."),

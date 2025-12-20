@@ -1,33 +1,33 @@
-package org.olaz.instasprite_be.domain.hashtag.dto;
-
-import com.querydsl.core.annotations.QueryProjection;
-
-import lombok.Getter;
-
-import lombok.Setter;
-import org.olaz.instasprite_be.global.vo.Image;
-
-@Getter
-public class HashtagProfileResponse {
-
-	@Setter
-    private Image image;
-	private String name;
-	private Long postCount;
-	private boolean isFollowing;
-
-	@QueryProjection
-	public HashtagProfileResponse(String name, Long postCount, boolean isFollowing) {
-		this.name = name;
-		this.postCount = postCount;
-		this.isFollowing = isFollowing;
-	}
-
-	@QueryProjection
-	public HashtagProfileResponse(String name, Long postCount) {
-		this.name = name;
-		this.postCount = postCount;
-		this.isFollowing = false;
-	}
-
-}
+//package org.olaz.instasprite_be.domain.hashtag.dto;
+//
+//import com.querydsl.core.annotations.QueryProjection;
+//
+//import lombok.Getter;
+//
+//import lombok.Setter;
+//import org.olaz.instasprite_be.global.vo.Image;
+//
+//@Getter
+//public class HashtagProfileResponse {
+//
+//	@Setter
+//    private Image image;
+//	private String name;
+//	private Long postCount;
+//	private boolean isFollowing;
+//
+//	@QueryProjection
+//	public HashtagProfileResponse(String name, Long postCount, boolean isFollowing) {
+//		this.name = name;
+//		this.postCount = postCount;
+//		this.isFollowing = isFollowing;
+//	}
+//
+//	@QueryProjection
+//	public HashtagProfileResponse(String name, Long postCount) {
+//		this.name = name;
+//		this.postCount = postCount;
+//		this.isFollowing = false;
+//	}
+//
+//}

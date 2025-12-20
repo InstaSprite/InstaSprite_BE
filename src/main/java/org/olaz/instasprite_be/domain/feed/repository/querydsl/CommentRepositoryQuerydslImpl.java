@@ -2,7 +2,7 @@ package org.olaz.instasprite_be.domain.feed.repository.querydsl;
 
 import static org.olaz.instasprite_be.domain.feed.entity.QComment.*;
 import static org.olaz.instasprite_be.domain.feed.entity.QCommentLike.*;
-import static org.olaz.instasprite_be.domain.feed.entity.QRecentComment.*;
+//import static org.olaz.instasprite_be.domain.feed.entity.QRecentComment.*;
 import static org.olaz.instasprite_be.domain.member.entity.QMember.*;
 
 import java.util.List;
@@ -25,25 +25,25 @@ public class CommentRepositoryQuerydslImpl implements CommentRepositoryQuerydsl 
 
 	private final JPAQueryFactory queryFactory;
 
-	@Override
-	public List<CommentDto> findAllRecentCommentDtoByMemberIdAndPostIdIn(Long memberId, List<Long> postIds) {
-		return queryFactory
-			.select(new QCommentDto(
-				recentComment.post.id,
-				recentComment.comment.id,
-				recentComment.member,
-				recentComment.comment.content,
-				recentComment.comment.uploadDate,
-				recentComment.comment.commentLikes.size(),
-				isExistCommentLikeWhereCommentEqAndMemberEq(memberId),
-				recentComment.comment.children.size()
-			))
-			.from(recentComment)
-			.innerJoin(recentComment.comment, comment)
-			.innerJoin(recentComment.member, member)
-			.where(recentComment.post.id.in(postIds))
-			.fetch();
-	}
+//	@Override
+//	public List<CommentDto> findAllRecentCommentDtoByMemberIdAndPostIdIn(Long memberId, List<Long> postIds) {
+//		return queryFactory
+//			.select(new QCommentDto(
+//				recentComment.post.id,
+//				recentComment.comment.id,
+//				recentComment.member,
+//				recentComment.comment.content,
+//				recentComment.comment.uploadDate,
+//				recentComment.comment.commentLikes.size(),
+//				isExistCommentLikeWhereCommentEqAndMemberEq(memberId),
+//				recentComment.comment.children.size()
+//			))
+//			.from(recentComment)
+//			.innerJoin(recentComment.comment, comment)
+//			.innerJoin(recentComment.member, member)
+//			.where(recentComment.post.id.in(postIds))
+//			.fetch();
+//	}
 
 	@Override
 	public Page<CommentDto> findCommentDtoPageByMemberIdAndPostId(Long memberId, Long postId, Pageable pageable) {

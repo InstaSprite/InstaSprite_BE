@@ -56,10 +56,10 @@ public class UrlConstant {
     public static final String POST_RECENT_PATH = "/recent";                        // GET - 10 most recent posts
     public static final String POST_ID_PATH = "/{postId}";                          // GET - get post, DELETE - delete post
     public static final String POST_ID_WITHOUT_PATH = "/{postId}/without";          // GET - get post without login
-    public static final String POST_LIKE_PATH = "/like";                            // POST - like, DELETE - unlike (uses @RequestParam postId)
+    public static final String POST_LIKE_PATH = "/like";                            // POST - like, DELETE
     public static final String POST_ID_LIKES_PATH = "/{postId}/likes";              // GET - list users who liked
-    public static final String POST_SAVE_PATH = "/save";                            // POST - bookmark, DELETE - unbookmark (uses @RequestParam postId)
-    public static final String POST_HASHTAGS_PATH = "/hashtag";                     // GET - posts by hashtag (uses @RequestParam hashtag)
+    public static final String POST_SAVE_PATH = "/save";                            // POST - bookmark, DELETE
+    public static final String POST_HASHTAGS_PATH = "/hashtag";                     // GET - posts by hashtag
 
 
     // ============================================
@@ -67,7 +67,7 @@ public class UrlConstant {
     // ============================================
     public static final String COMMENTS = "/comments";
     public static final String COMMENT_ID_PATH = "/{commentId}";                    // GET - get replies, DELETE - delete comment
-    public static final String COMMENT_POSTS_ID_PATH = "/posts/{postId}";            // GET - comments for a post
+    public static final String COMMENT_POSTS_ID_PATH = "/posts/{postId}";           // GET - comments for a post
     public static final String COMMENT_LIKE_PATH = "/like";                         // POST - like, DELETE - unlike (uses @RequestParam commentId)
     public static final String COMMENT_ID_LIKES_PATH = "/{commentId}/likes";        // GET - list users who liked comment
 
@@ -75,8 +75,8 @@ public class UrlConstant {
     // ============================================
     // POSTS_ID_COMMENTS - Link between Posts and Comments
     // ============================================
-    public static final String POSTS_ID_COMMENTS = "/posts/{postId}/comments";  // GET - list comments, POST - create comment
-    // Note: This is defined in original spec but implemented via COMMENTS controller with POST method
+//    public static final String POSTS_ID_COMMENTS = "/posts/{postId}/comments";  // GET - list comments, POST - create comment
+
 
 
     // ============================================
@@ -91,28 +91,28 @@ public class UrlConstant {
     // ============================================
     // HASHTAGS URLs
     // ============================================
-    public static final String HASHTAGS = "/hashtags";
-    public static final String HASHTAGS_FOLLOW_PATH = "/follow";                               // POST - follow, DELETE - unfollow (relative path)
-    public static final String HASHTAGS_NAME_PATH = "/{hashtag}";                              // GET - hashtag profile (relative path)
-    public static final String HASHTAGS_NAME_WITHOUT_PATH = "/{hashtag}/without";              // GET - hashtag profile without login (relative path)
-    
-    // Full paths (for reference)
-    public static final String HASHTAGS_FOLLOW = HASHTAGS + HASHTAGS_FOLLOW_PATH;              // POST - follow, DELETE - unfollow hashtag (uses @RequestParam)
-    public static final String HASHTAGS_NAME = HASHTAGS + HASHTAGS_NAME_PATH;                  // GET - hashtag profile
-    public static final String HASHTAGS_NAME_WITHOUT = HASHTAGS + HASHTAGS_NAME_WITHOUT_PATH;  // GET - hashtag profile without login
+//    public static final String HASHTAGS = "/hashtags";
+//    public static final String HASHTAGS_FOLLOW_PATH = "/follow";                               // POST - follow, DELETE - unfollow (relative path)
+//    public static final String HASHTAGS_NAME_PATH = "/{hashtag}";                              // GET - hashtag profile (relative path)
+//    public static final String HASHTAGS_NAME_WITHOUT_PATH = "/{hashtag}/without";              // GET - hashtag profile without login (relative path)
+//
+//    // Full paths (for reference)
+//    public static final String HASHTAGS_FOLLOW = HASHTAGS + HASHTAGS_FOLLOW_PATH;              // POST - follow, DELETE - unfollow hashtag (uses @RequestParam)
+//    public static final String HASHTAGS_NAME = HASHTAGS + HASHTAGS_NAME_PATH;                  // GET - hashtag profile
+//    public static final String HASHTAGS_NAME_WITHOUT = HASHTAGS + HASHTAGS_NAME_WITHOUT_PATH;  // GET - hashtag profile without login
 
 
     // ============================================
     // SEARCH URLs
     // ============================================
-    public static final String TOP_SEARCH = "/topsearch";                                       // GET - general search
-    public static final String TOP_SEARCH_RECOMMEND = TOP_SEARCH + "/recommend";                 // GET - recommended members
-    public static final String TOP_SEARCH_AUTO_MEMBER = TOP_SEARCH + "/auto/member";             // GET - member autocomplete
-    public static final String TOP_SEARCH_AUTO_HASHTAG = TOP_SEARCH + "/auto/hashtag";           // GET - hashtag autocomplete
-    public static final String TOP_SEARCH_MARK = TOP_SEARCH + "/mark";                           // POST - mark search & update history
-    public static final String TOP_SEARCH_RECENT_TOP = TOP_SEARCH + "/recent/top";               // GET - top 15 recent searches
-    public static final String TOP_SEARCH_RECENT = TOP_SEARCH + "/recent";                       // GET - recent search history, DELETE - delete recent search
-    public static final String TOP_SEARCH_RECENT_ALL = TOP_SEARCH + "/recent/all";               // DELETE - clear all recent searches
+//    public static final String TOP_SEARCH = "/topsearch";                                       // GET - general search
+//    public static final String TOP_SEARCH_RECOMMEND = TOP_SEARCH + "/recommend";                 // GET - recommended members
+//    public static final String TOP_SEARCH_AUTO_MEMBER = TOP_SEARCH + "/auto/member";             // GET - member autocomplete
+//    public static final String TOP_SEARCH_AUTO_HASHTAG = TOP_SEARCH + "/auto/hashtag";           // GET - hashtag autocomplete
+//    public static final String TOP_SEARCH_MARK = TOP_SEARCH + "/mark";                           // POST - mark search & update history
+//    public static final String TOP_SEARCH_RECENT_TOP = TOP_SEARCH + "/recent/top";               // GET - top 15 recent searches
+//    public static final String TOP_SEARCH_RECENT = TOP_SEARCH + "/recent";                       // GET - recent search history, DELETE - delete recent search
+//    public static final String TOP_SEARCH_RECENT_ALL = TOP_SEARCH + "/recent/all";               // DELETE - clear all recent searches
 
 
 
@@ -120,12 +120,12 @@ public class UrlConstant {
     // ============================================
     // NOTIFICATIONS URLs (Alarms/Notifications)
     // ============================================
-    public static final String ALARMS = "/alarms";                                             // GET - list alarms/notifications
+//    public static final String ALARMS = "/alarms";                                             // GET - list alarms/notifications
 
 
     // ============================================
     // BLOCKS URLs (Blocked Users)
     // ============================================
-    public static final String BLOCKS = "/blocks";                          // GET - list blocked users (not implemented)
-    public static final String BLOCKS_USERNAME = BLOCKS + "/{username}";    // POST - block, DELETE - unblock
+//    public static final String BLOCKS = "/blocks";                          // GET - list blocked users (not implemented)
+//    public static final String BLOCKS_USERNAME = BLOCKS + "/{username}";    // POST - block, DELETE - unblock
 }

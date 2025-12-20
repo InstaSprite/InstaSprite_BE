@@ -30,12 +30,6 @@ public class UserProfileResponse {
 	@Schema(description = "Follower status", example = "false")
 	private boolean isFollower;
 
-	@Schema(description = "Blocking status", example = "false")
-	private boolean isBlocking;
-
-	@Schema(description = "Blocked status", example = "false")
-	private boolean isBlocked;
-
 	@Schema(description = "Introduction", example = "Hello everyone")
 	private String memberIntroduce;
 
@@ -58,7 +52,7 @@ public class UserProfileResponse {
 
 	@QueryProjection
 	public UserProfileResponse(String username, String name, Image image,
-		boolean isFollowing, boolean isFollower, boolean isBlocking, boolean isBlocked,
+		boolean isFollowing, boolean isFollower,
 		String introduce, Long postsCount, Long followingsCount, Long followersCount,
 		boolean isMe) {
 		this.memberUsername = username;
@@ -66,14 +60,11 @@ public class UserProfileResponse {
 		this.memberImage = image;
 		this.isFollowing = isFollowing;
 		this.isFollower = isFollower;
-		this.isBlocking = isBlocking;
-		this.isBlocked = isBlocked;
 		this.memberIntroduce = introduce;
 		this.memberPostsCount = postsCount;
 		this.memberFollowingsCount = followingsCount;
 		this.memberFollowersCount = followersCount;
 		this.isMe = isMe;
-		checkBlock();
 	}
 
 	public void setFollowingMemberFollow(List<FollowDto> followingMemberFollow, int maxCount) {
@@ -83,15 +74,5 @@ public class UserProfileResponse {
 			.collect(Collectors.toList());
 		this.followingMemberFollowCount = followingMemberFollow.size() - this.followingMemberFollow.size();
 	}
-
-
-	private void checkBlock() {
-		if (this.isBlocked || this.isBlocking) {
-			this.memberPostsCount = 0L;
-			this.memberFollowingsCount = 0L;
-			this.memberFollowersCount = 0L;
-		}
-	}
-
 }
 

@@ -44,3 +44,4 @@ src/main/resources/application-dev.properties
 
 #Script to deploy on server 
 src/main/resources/deploy/
+src/main/resources/image

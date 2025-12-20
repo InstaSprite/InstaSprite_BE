@@ -22,7 +22,7 @@ import org.olaz.instasprite_be.domain.member.entity.Member;
 
 @Getter
 @Entity
-@Table(name = "comment_likes")
+@Table(name = "comment_like")
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CommentLike {
