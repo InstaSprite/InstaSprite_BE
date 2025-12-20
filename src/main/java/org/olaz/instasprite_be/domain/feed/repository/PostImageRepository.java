@@ -16,7 +16,7 @@ public interface PostImageRepository extends JpaRepository<PostImage, Long>, Pos
 	List<PostImage> findAllByPost(Post post);
 
 	@Query("select new org.olaz.instasprite_be.domain.feed.dto.PostImageDto("
-		+ "pi.post.id, pi.id, pi.image.imageUrl, pi.altText) "
+		+ "pi.post.id, pi.id, pi.image.imageUrl, pi.altText, pi.image.imageWidth, pi.image.imageHeight) "
 		+ "from PostImage pi "
 		+ "where pi.post.id in :postIds")
 	List<PostImageDto> findAllPostImageDtoByPostIdIn(@Param(value = "postIds") List<Long> postIds);

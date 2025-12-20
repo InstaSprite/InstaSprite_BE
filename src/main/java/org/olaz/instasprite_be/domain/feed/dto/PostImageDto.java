@@ -19,15 +19,20 @@ public class PostImageDto {
 	private Long id;
 	private String postImageUrl;
 	private String altText;
+	private Integer imageWidth;
+	private Integer imageHeight;
 //	@Setter
 //    private List<PostTagDto> postTags = new ArrayList<>();
 
 	@QueryProjection
-	public PostImageDto(Long postId, Long id, String postImageUrl, String altText) {
+	public PostImageDto(Long postId, Long id, String postImageUrl, String altText, Integer imageWidth,
+		Integer imageHeight) {
 		this.postId = postId;
 		this.id = id;
 		this.postImageUrl = postImageUrl;
 		this.altText = altText;
+		this.imageWidth = imageWidth;
+		this.imageHeight = imageHeight;
 	}
 
 }

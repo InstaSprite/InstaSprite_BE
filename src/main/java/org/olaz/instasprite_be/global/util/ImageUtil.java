@@ -1,7 +1,12 @@
 package org.olaz.instasprite_be.global.util;
 
 
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import org.apache.commons.io.FilenameUtils;
+import org.olaz.instasprite_be.global.error.exception.FileConvertFailException;
 import org.olaz.instasprite_be.global.vo.Image;
 import org.olaz.instasprite_be.global.vo.ImageType;
 
@@ -28,10 +33,25 @@ public class ImageUtil {
             throw new org.olaz.instasprite_be.global.error.exception.NotSupportedImageTypeException();
         }
 
+        final int width;
+        final int height;
+        try {
+            final var bufferedImage = ImageIO.read(file.getInputStream());
+            if (bufferedImage == null) {
+                throw new FileConvertFailException();
+            }
+            width = bufferedImage.getWidth();
+            height = bufferedImage.getHeight();
+        } catch (IOException e) {
+            throw new FileConvertFailException();
+        }
+
         return Image.builder()
                 .imageType(ImageType.valueOf(type))
                 .imageName(name)
                 .imageUUID(java.util.UUID.randomUUID().toString())
+                .imageWidth(width)
+                .imageHeight(height)
                 .build();
     }
 

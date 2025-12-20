@@ -24,7 +24,8 @@ public class PostImageRepositoryJdbcImpl implements PostImageRepositoryJdbc {
 	public void savePostImages(List<Image> images, Long postId, List<String> altTexts) {
 		final String sql = String.format(
 			"INSERT INTO %s.post_image (post_id, post_image_url, post_image_type, post_image_name, "
-				+ "post_image_uuid, post_image_alt_text) VALUES(?, ?, ?, ?, ?, ?)", dbSchema);
+				+ "post_image_uuid, image_width, image_height, post_image_alt_text) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+			dbSchema);
 
 		jdbcTemplate.batchUpdate(
 			sql,
@@ -36,7 +37,9 @@ public class PostImageRepositoryJdbcImpl implements PostImageRepositoryJdbc {
 					ps.setString(3, images.get(i).getImageType().toString());
 					ps.setString(4, images.get(i).getImageName());
 					ps.setString(5, images.get(i).getImageUUID());
-					ps.setString(6, altTexts.get(i));
+					ps.setInt(6, images.get(i).getImageWidth());
+					ps.setInt(7, images.get(i).getImageHeight());
+					ps.setString(8, altTexts.get(i));
 				}
 
 				@Override

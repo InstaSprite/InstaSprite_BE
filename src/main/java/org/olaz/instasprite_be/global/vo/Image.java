@@ -27,6 +27,12 @@ public class Image {
 
 	private String imageUUID;
 
+	@Builder.Default
+	private Integer imageWidth = 1080;
+
+	@Builder.Default
+	private Integer imageHeight = 1080;
+
 	public void setUrl(String url) {
 		this.imageUrl = url;
 	}
