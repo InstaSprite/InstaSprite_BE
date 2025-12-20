@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 
-import org.olaz.instasprite_be.domain.feed.dto.PostImageTagRequest;
+//import org.olaz.instasprite_be.domain.feed.dto.PostImageTagRequest;
 import org.olaz.instasprite_be.domain.feed.entity.Post;
 import org.olaz.instasprite_be.domain.feed.entity.PostImage;
 import org.olaz.instasprite_be.domain.feed.repository.PostImageRepository;

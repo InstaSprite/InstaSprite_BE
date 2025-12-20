@@ -14,6 +14,8 @@ COPY --from=build /app/target/*.jar /app/app.jar
 
 EXPOSE 9090
 
+ENV SPRING_PROFILE=prod
+
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${SPRING_PROFILE}", "/app/app.jar"]
 
 

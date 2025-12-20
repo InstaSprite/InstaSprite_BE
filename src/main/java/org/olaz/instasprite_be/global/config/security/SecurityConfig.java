@@ -36,18 +36,14 @@ public class SecurityConfig {
         "/swagger-ui.html",
         "/swagger-resources/**",
         "/webjars/**",
-        
-        // Authentication endpoints
+
         "/api/v1/auth/google/**",
         "/api/v1/auth/refresh",
-        
-        // Health check
+
         "/actuator/**",
-        
-        // Static image resources
+
         "/images/**",
-        
-        // Public member endpoints - use single * for path variables
+
         "/api/v1/accounts/*/without",
         "/api/v1/accounts/*/posts/recent/without", 
         "/api/v1/accounts/*/posts/without"

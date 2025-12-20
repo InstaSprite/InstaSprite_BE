@@ -71,9 +71,8 @@ public class PostController {
 	public ResponseEntity<ResultResponse> getPostPage(
 			@Parameter(description = "Post page", example = "1", required = true) @RequestParam int page) {
 		page = (page == BASE_PAGE_NUMBER ? BASE_PAGE_NUMBER : page - PAGE_ADJUSTMENT_VALUE);
-		final Page<PostDto> postPage = postService.getPostDtoPageForFollowedUsers(BASE_POST_SIZE, page);
+		final Page<PostDto> postPage = postService.getPostDtoPageForAllUsers(BASE_POST_SIZE, page);
 
-		// Return only the content to avoid PageImpl serialization issues
 		return ResponseEntity.ok(ResultResponse.of(GET_POST_PAGE_SUCCESS, postPage.getContent()));
 	}
 
@@ -102,7 +101,6 @@ public class PostController {
 		page = (page == BASE_PAGE_NUMBER ? BASE_PAGE_NUMBER : page - PAGE_ADJUSTMENT_VALUE);
 		final Page<PostDto> postPage = postService.getPostDtoPageForAllUsers(BASE_POST_SIZE, page);
 
-		// Return only the content to avoid PageImpl serialization issues
 		return ResponseEntity.ok(ResultResponse.of(GET_RECENT_POSTS_SUCCESS, postPage.getContent()));
 	}
 

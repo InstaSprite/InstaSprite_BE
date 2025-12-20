@@ -116,42 +116,6 @@ public class JwtUtil {
     }
 
     /**
-     * Generate access token
-     */
-    public String generateAccessToken(UserDetails userDetails) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + accessTokenValidity);
-
-        String authorities = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        return Jwts.builder()
-                .subject(ACCESS_TOKEN_SUBJECT)
-                .claim(CLAIM_MEMBER_ID_KEY, userDetails.getUsername())
-                .claim(CLAIM_AUTHORITIES_KEY, authorities)
-                .claim(CLAIM_JWT_TYPE_KEY, BEARER_TYPE)
-                .expiration(expiryDate)
-                .signWith(secretKey, SignatureAlgorithm.HS512)
-                .compact();
-    }
-
-    /**
-     * Generate refresh token
-     */
-    public String generateRefreshToken(String username) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + refreshTokenValidity);
-
-        return Jwts.builder()
-                .subject(REFRESH_TOKEN_SUBJECT)
-                .claim(CLAIM_MEMBER_ID_KEY, username)
-                .expiration(expiryDate)
-                .signWith(secretKey, SignatureAlgorithm.HS512)
-                .compact();
-    }
-
-    /**
      * Parse and validate JWT claims
      */
     private Claims parseClaims(String token) throws BusinessException {

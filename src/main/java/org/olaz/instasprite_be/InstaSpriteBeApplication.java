@@ -9,7 +9,6 @@ import java.util.TimeZone;
 public class InstaSpriteBeApplication {
 
     public static void main(String[] args) {
-        // Set timezone for the application
         System.setProperty("user.timezone", "Asia/Ho_Chi_Minh");
         TimeZone.setDefault(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
         

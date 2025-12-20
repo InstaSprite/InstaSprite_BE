@@ -34,8 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                   FilterChain filterChain) throws ServletException, IOException {
         
         String requestURI = request.getRequestURI();
-        
-        // Skip JWT processing for public endpoints
+
         if (isPublicEndpoint(requestURI)) {
             filterChain.doFilter(request, response);
             return;

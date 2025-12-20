@@ -34,7 +34,7 @@ public class PostDto {
 	@Setter
     private long postLikesCount;
 	private boolean postBookmarkFlag;
-//	private boolean postLikeFlag;
+	private boolean postLikeFlag;
 	private boolean commentOptionFlag;
 	private boolean isFollowing;
 	@Setter
@@ -53,7 +53,7 @@ public class PostDto {
 		this.postCommentsCount = postCommentsCount;
 		this.postLikesCount = postLikesCount;
 		this.postBookmarkFlag = postBookmarkFlag;
-//		this.postLikeFlag = postLikeFlag;
+		this.postLikeFlag = postLikeFlag;
 		this.commentOptionFlag = commentOptionFlag;
 		this.isFollowing = isFollowing;
 	}
@@ -68,7 +68,7 @@ public class PostDto {
 		this.postCommentsCount = postCommentsCount;
 		this.postLikesCount = postLikesCount;
 		this.postBookmarkFlag = false;
-//		this.postLikeFlag = false;
+		this.postLikeFlag = false;
 		this.commentOptionFlag = commentOptionFlag;
 		this.isFollowing = false;
 	}

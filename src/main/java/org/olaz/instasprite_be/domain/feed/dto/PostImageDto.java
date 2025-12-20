@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
+//@AllArgsConstructor
 public class PostImageDto {
 
 	@JsonIgnore
@@ -19,8 +19,8 @@ public class PostImageDto {
 	private Long id;
 	private String postImageUrl;
 	private String altText;
-	@Setter
-    private List<PostTagDto> postTags = new ArrayList<>();
+//	@Setter
+//    private List<PostTagDto> postTags = new ArrayList<>();
 
 	@QueryProjection
 	public PostImageDto(Long postId, Long id, String postImageUrl, String altText) {

@@ -25,15 +25,16 @@ import lombok.RequiredArgsConstructor;
 import org.olaz.instasprite_be.domain.feed.dto.CommentDto;
 import org.olaz.instasprite_be.domain.feed.dto.PostDto;
 import org.olaz.instasprite_be.domain.feed.dto.PostImageDto;
-import org.olaz.instasprite_be.domain.feed.dto.PostImageTagRequest;
+//import org.olaz.instasprite_be.domain.feed.dto.PostImageTagRequest;
 import org.olaz.instasprite_be.domain.feed.dto.PostLikeCountDto;
 import org.olaz.instasprite_be.domain.feed.dto.PostLikeDto;
-import org.olaz.instasprite_be.domain.feed.dto.PostTagDto;
+//import org.olaz.instasprite_be.domain.feed.dto.PostTagDto;
 import org.olaz.instasprite_be.domain.feed.dto.PostUploadRequest;
 import org.olaz.instasprite_be.domain.feed.dto.PostUploadResponse;
 import org.olaz.instasprite_be.domain.feed.entity.Bookmark;
 import org.olaz.instasprite_be.domain.feed.entity.Post;
 import org.olaz.instasprite_be.domain.feed.entity.PostLike;
+import org.olaz.instasprite_be.domain.feed.exception.BookmarkMyselfFailException;
 import org.olaz.instasprite_be.domain.feed.exception.CantDeletePostException;
 import org.olaz.instasprite_be.domain.feed.repository.BookmarkRepository;
 import org.olaz.instasprite_be.domain.feed.repository.CommentRepository;
@@ -87,7 +88,8 @@ public class PostService {
 		final List<MultipartFile> postImages = request.getPostImages();
 		final List<String> altTexts = request.getAltTexts();
 //		final List<PostImageTagRequest> postImageTags = request.getPostImageTags();
-		validateParameters(postImages.size(), altTexts.size());
+		validateParameters(postImages, altTexts);
+		final List<String> normalizedAltTexts = normalizeAltTexts(postImages, altTexts);
 
 		final Member loginMember = authUtil.getLoginMember();
 		final Post post = Post.builder()
@@ -97,7 +99,7 @@ public class PostService {
 			.build();
 
 		postRepository.save(post);
-		postImageService.saveAll(post, request.getPostImages(), request.getAltTexts());
+		postImageService.saveAll(post, postImages, normalizedAltTexts);
 //		hashtagService.registerHashtags(post);
 //		mentionService.mentionMembers(loginMember, post);
 
@@ -139,7 +141,7 @@ public class PostService {
 	public Page<PostDto> getPostDtoPageForAllUsers(int size, int page) {
 		final Member loginMember = authUtil.getLoginMember();
 		final Pageable pageable = PageRequest.of(page, size);
-		final Page<PostDto> postDtoPage = postRepository.findAllPostDtoPage(pageable);
+		final Page<PostDto> postDtoPage = postRepository.findAllPostDtoPage(pageable, loginMember.getId());
 		setContents(loginMember, postDtoPage.getContent());
 		return postDtoPage;
 	}
@@ -240,6 +242,10 @@ public class PostService {
 		final Post post = getPost(postId);
 		final Member loginMember = authUtil.getLoginMember();
 
+		if (post.getMember().getId().equals(loginMember.getId())) {
+			throw new BookmarkMyselfFailException();
+		}
+
 		if (bookmarkRepository.findByMemberAndPost(loginMember, post).isPresent()) {
 			throw new EntityAlreadyExistException(BOOKMARK_ALREADY_EXIST);
 		}
@@ -282,14 +288,12 @@ public class PostService {
 //		setRecentComments(loginMember.getId(), postDtos, postIds);
 		setFollowingMemberUsernameLikedPost(loginMember, postDtos, postIds);
 		setMentionAndHashtagList(postDtos);
-		hidePostLikesCountIfPostLikeFlagIsFalse(loginMember, postDtos);
 	}
 
 	private void setContent(Member loginMember, PostDto postDto) {
 		setPostImages(List.of(postDto), List.of(postDto.getPostId()));
 		setFollowingMemberUsernameLikedPost(loginMember, List.of(postDto), List.of(postDto.getPostId()));
 		setComments(postDto);
-		hidePostLikesCountIfPostLikeFlagIsFalse(loginMember, postDto);
 		setMentionAndHashtagList(postDto);
 	}
 
@@ -326,12 +330,13 @@ public class PostService {
 		});
 	}
 
-	private void validateParameters(int multipartFileSize, int altTextSize) {
+	private void validateParameters(List<MultipartFile> postImages, List<String> altTexts) {
 		final List<FieldError> errors = new ArrayList<>();
 
-		if (multipartFileSize != altTextSize) {
+		if (altTexts != null && !altTexts.isEmpty() && postImages.size() != altTexts.size()) {
 			errors.add(new FieldError("postImages.size" + COMMA_WITH_BLANK + "altTexts.size",
-				multipartFileSize + COMMA_WITH_BLANK + altTextSize, POST_IMAGES_AND_ALT_TEXTS_MISMATCH.getMessage()));
+				postImages.size() + COMMA_WITH_BLANK + altTexts.size(),
+				POST_IMAGES_AND_ALT_TEXTS_MISMATCH.getMessage()));
 		}
 
 //		final Map<Long, List<PostImageTagRequest>> tagMapGroupByImageId = tags.stream()
@@ -363,21 +368,25 @@ public class PostService {
 		}
 	}
 
-	private void hidePostLikesCountIfPostLikeFlagIsFalse(Member loginMember, PostDto postDto) {
-		hidePostLikesCountIfPostLikeFlagIsFalse(loginMember, List.of(postDto));
-	}
+	private List<String> normalizeAltTexts(List<MultipartFile> postImages, List<String> altTexts) {
+		final List<String> normalizedAltTexts = new ArrayList<>();
 
-	private void hidePostLikesCountIfPostLikeFlagIsFalse(Member loginMember, List<PostDto> postDtos) {
-		final Map<Long, PostDto> postDtosToHidePostLikesCountMap = postDtos.stream()
-			.filter(postDto -> !postDto.getMember().getId().equals(loginMember.getId()))
-			.collect(toMap(PostDto::getPostId, PostDto -> PostDto));
+		if (altTexts == null || altTexts.isEmpty()) {
+			for (int i = 0; i < postImages.size(); i++) {
+				normalizedAltTexts.add(null);
+			}
+			return normalizedAltTexts;
+		}
 
-		final List<Long> postIds = new ArrayList<>(postDtosToHidePostLikesCountMap.keySet());
-		final List<PostLikeCountDto> postLikeCountDtos = postLikeRepository
-			.findAllPostLikeCountDtoOfFollowingsLikedPostByMemberAndPostIdIn(loginMember, postIds);
+		if (altTexts.size() != postImages.size()) {
+			for (int i = 0; i < postImages.size(); i++) {
+				normalizedAltTexts.add(i < altTexts.size() ? altTexts.get(i) : null);
+			}
+			return normalizedAltTexts;
+		}
 
-		postLikeCountDtos.forEach(postLikeCountDto -> postDtosToHidePostLikesCountMap.get(postLikeCountDto.getPostId())
-			.setPostLikesCount(postLikeCountDto.getPostLikesCount()));
+		normalizedAltTexts.addAll(altTexts);
+		return normalizedAltTexts;
 	}
 
 	private void setPostImages(List<PostDto> postDtos, List<Long> postIds) {

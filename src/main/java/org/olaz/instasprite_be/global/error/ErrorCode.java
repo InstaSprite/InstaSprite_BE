@@ -68,6 +68,7 @@ public enum ErrorCode {
     // Bookmark
     BOOKMARK_ALREADY_EXIST(400, "BK001", "Post already bookmarked."),
     BOOKMARK_NOT_FOUND(400, "BK002", "Post has not been bookmarked yet."),
+    BOOKMARK_MYSELF_FAIL(400, "BK003", "You cannot bookmark your own post."),
 
     // Comment
     COMMENT_NOT_FOUND(400, "CO001", "Comment does not exist."),

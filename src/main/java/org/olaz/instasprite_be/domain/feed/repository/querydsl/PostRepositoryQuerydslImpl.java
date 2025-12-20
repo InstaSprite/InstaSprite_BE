@@ -9,6 +9,7 @@ import static org.olaz.instasprite_be.domain.member.entity.QMember.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -28,6 +29,8 @@ import org.olaz.instasprite_be.domain.feed.dto.QPostDto;
 
 @RequiredArgsConstructor
 public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
+
+	private static final Logger log = Logger.getLogger(PostRepositoryQuerydslImpl.class.getName());
 
 	private final JPAQueryFactory queryFactory;
 
@@ -78,7 +81,6 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				isExistBookmarkWherePostEqMemberIdEq(memberId),
 				isExistPostLikeWherePostEqAndMemberIdEq(memberId),
 				post.commentFlag,
-//				post.likeFlag,
 				isFollowing(memberId)
 			))
 			.from(post)
@@ -97,7 +99,6 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				post.comments.size(),
 				post.postLikes.size(),
 				post.commentFlag
-//				post.likeFlag
 			))
 			.from(post)
 			.where(post.id.eq(postId))
@@ -135,7 +136,7 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 	}
 
 	@Override
-	public Page<PostDto> findAllPostDtoPage(Pageable pageable) {
+	public Page<PostDto> findAllPostDtoPage(Pageable pageable, Long memberId) {
 		final List<PostDto> postDtos = queryFactory
 			.select(new QPostDto(
 				post.id,
@@ -144,8 +145,10 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 				post.member,
 				post.comments.size(),
 				post.postLikes.size(),
-				post.commentFlag
-//				post.likeFlag
+				isExistBookmarkWherePostEqMemberIdEq(memberId),
+				isExistPostLikeWherePostEqAndMemberIdEq(memberId),
+				post.commentFlag,
+				isFollowing(memberId)
 			))
 			.from(post)
 			.innerJoin(post.member, member)
@@ -169,6 +172,8 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 	}
 
 	private BooleanExpression isExistPostLikeWherePostEqAndMemberIdEq(Long id) {
+		log.fine(() -> "Building postLike exists predicate for memberId=" + id);
+
 		return JPAExpressions
 			.selectFrom(postLike)
 			.where(postLike.post.eq(post).and(postLike.member.id.eq(id)))

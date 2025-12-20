@@ -23,8 +23,7 @@ public class UrlConstant {
     // ============================================
     public static final String AUTH = "/auth";
     public static final String AUTH_GOOGLE = AUTH + "/google";        // POST - login with Google
-    public static final String AUTH_REFRESH = AUTH + "/refresh";      // POST - refresh token
-    public static final String AUTH_LOGOUT = AUTH + "/logout";        // POST - logout
+    public static final String AUTH_REFRESH = AUTH + "/refresh";      // POST - refresh token     // POST - logout
 
     // ============================================
     // MEMBERS URLs (Users) - "/accounts" mapping in controllers
@@ -45,8 +44,6 @@ public class UrlConstant {
     public static final String ACCOUNTS_USERNAME_POSTS_WITHOUT = ACCOUNTS_USERNAME + "/posts/without";    // GET - posts without login
     public static final String ACCOUNTS_POSTS_SAVED_RECENT = ACCOUNTS + "/posts/saved/recent";           // GET - 15 recent saved posts
     public static final String ACCOUNTS_POSTS_SAVED = ACCOUNTS + "/posts/saved";                          // GET - saved posts with pagination
-    public static final String ACCOUNTS_USERNAME_POSTS_TAGGED_RECENT = ACCOUNTS_USERNAME + "/posts/tagged/recent";  // GET - 15 recent tagged posts
-    public static final String ACCOUNTS_USERNAME_POSTS_TAGGED = ACCOUNTS_USERNAME + "/posts/tagged";      // GET - tagged posts with pagination
 
 
     // ============================================
@@ -59,8 +56,6 @@ public class UrlConstant {
     public static final String POST_LIKE_PATH = "/like";                            // POST - like, DELETE
     public static final String POST_ID_LIKES_PATH = "/{postId}/likes";              // GET - list users who liked
     public static final String POST_SAVE_PATH = "/save";                            // POST - bookmark, DELETE
-    public static final String POST_HASHTAGS_PATH = "/hashtag";                     // GET - posts by hashtag
-
 
     // ============================================
     // COMMENTS URLs

@@ -18,7 +18,7 @@ public interface PostRepositoryQuerydsl {
 
 	Page<PostDto> findPostDtoPageByMemberIdAndPostIdIn(Pageable pageable, Long memberId, List<Long> postIds);
 
-	Page<PostDto> findAllPostDtoPage(Pageable pageable);
+	Page<PostDto> findAllPostDtoPage(Pageable pageable, Long memberId);
 
 	Optional<PostDto> findMostLikedPostDto();
 

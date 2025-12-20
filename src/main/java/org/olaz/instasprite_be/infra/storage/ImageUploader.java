@@ -24,9 +24,6 @@ public class ImageUploader {
 
 	@Value("${app.upload.base-dir}")
 	private String baseUploadDir;
-	
-	@Value("${server.base-url}")
-	private String serverBaseUrl;
 
 	public Image uploadImage(MultipartFile multipartFile, String dirName) {
 		final Image image = ImageUtil.convertMultipartToImage(multipartFile);

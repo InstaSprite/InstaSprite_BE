@@ -17,7 +17,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Serve uploaded images from configured base directory
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:" + uploadBaseDir + "/");
     }

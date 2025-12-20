@@ -3,8 +3,6 @@ package org.olaz.instasprite_be.domain.feed.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -30,9 +28,8 @@ public class PostUploadRequest {
 	@Size(min = 1, max = 10, message = "Post images must be between 1 and 10.")
 	private List<MultipartFile> postImages = new ArrayList<>();
 
-	@Schema(description = "Post image alt texts", required = true, example = "image")
-	@Size(min = 1, message = "Post image alt text is required.")
-	private List<@NotBlank(message = "Post image alt text is required.") String> altTexts;
+	@Schema(description = "Post image alt texts", example = "image")
+	private List<String> altTexts = new ArrayList<>();
 
 //	@Schema(description = "Post image user tags")
 //	@Valid
