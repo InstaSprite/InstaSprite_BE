@@ -164,6 +164,39 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 		return new PageImpl<>(postDtos, pageable, total);
 	}
 
+	@Override
+	public Page<PostDto> searchPostDtoByContentContains(String content, Pageable pageable, Long memberId) {
+		final BooleanExpression predicate = post.content.containsIgnoreCase(content);
+
+		final List<PostDto> postDtos = queryFactory
+			.select(new QPostDto(
+				post.id,
+				post.content,
+				post.uploadDate,
+				post.member,
+				post.comments.size(),
+				post.postLikes.size(),
+				isExistBookmarkWherePostEqMemberIdEq(memberId),
+				isExistPostLikeWherePostEqAndMemberIdEq(memberId),
+				post.commentFlag,
+				isFollowing(memberId)
+			))
+			.from(post)
+			.innerJoin(post.member, member)
+			.where(predicate)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.orderBy(post.id.desc())
+			.fetch();
+
+		final long total = queryFactory
+			.selectFrom(post)
+			.where(predicate)
+			.fetchCount();
+
+		return new PageImpl<>(postDtos, pageable, total);
+	}
+
 	private BooleanExpression isFollowing(Long memberId) {
 		return JPAExpressions
 			.selectFrom(follow)

@@ -14,6 +14,7 @@ HELP.md
 logs
 *.log
 node_modules
+src/main/resources/images/
 
 
 

@@ -100,6 +100,7 @@ public class UrlConstant {
     // ============================================
     // SEARCH URLs
     // ============================================
+    public static final String SEARCH = "/search";                                // GET - unified search (member or post)
 //    public static final String TOP_SEARCH = "/topsearch";                                       // GET - general search
 //    public static final String TOP_SEARCH_RECOMMEND = TOP_SEARCH + "/recommend";                 // GET - recommended members
 //    public static final String TOP_SEARCH_AUTO_MEMBER = TOP_SEARCH + "/auto/member";             // GET - member autocomplete

@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
+import org.olaz.instasprite_be.global.annotation.Timed;
 
 import lombok.extern.slf4j.Slf4j;
 

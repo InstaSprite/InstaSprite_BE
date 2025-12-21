@@ -146,6 +146,14 @@ public class PostService {
 		return postDtoPage;
 	}
 
+	public Page<PostDto> searchPostsByContent(String query, int page, int size) {
+		final Member loginMember = authUtil.getLoginMember();
+		final Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "id");
+		final Page<PostDto> postPage = postRepository.searchPostDtoByContentContains(query, pageable, loginMember.getId());
+		setContents(loginMember, postPage.getContent());
+		return postPage;
+	}
+
 	public PostDto getPostDto(Long postId) {
 		final Member loginMember = authUtil.getLoginMember();
 		final PostDto postDto = postRepository.findPostDtoByPostIdAndMemberId(postId, loginMember.getId())

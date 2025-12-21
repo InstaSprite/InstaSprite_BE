@@ -5,6 +5,12 @@ import static org.olaz.instasprite_be.domain.follow.entity.QFollow.*;
 //import static org.olaz.instasprite_be.domain.member.entity.QBlock.*;
 import static org.olaz.instasprite_be.domain.member.entity.QMember.*;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
@@ -12,7 +18,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 
+import org.olaz.instasprite_be.domain.member.dto.MemberDto;
 import org.olaz.instasprite_be.domain.member.dto.MiniProfileResponse;
+import org.olaz.instasprite_be.domain.member.dto.QMemberDto;
 import org.olaz.instasprite_be.domain.member.dto.QMiniProfileResponse;
 import org.olaz.instasprite_be.domain.member.dto.QUserProfileResponse;
 import org.olaz.instasprite_be.domain.member.dto.UserProfileResponse;
@@ -61,6 +69,27 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl {
 			.from(member)
 			.where(member.username.eq(username))
 			.fetchOne();
+	}
+
+	@Override
+	public Page<MemberDto> searchMemberDtoByUsernameContains(String username, Pageable pageable) {
+		final BooleanExpression predicate = member.username.containsIgnoreCase(username);
+
+		final List<MemberDto> members = queryFactory
+			.select(new QMemberDto(member))
+			.from(member)
+			.where(predicate)
+			.offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.orderBy(member.id.desc())
+			.fetch();
+
+		final long total = queryFactory
+			.selectFrom(member)
+			.where(predicate)
+			.fetchCount();
+
+		return new PageImpl<>(members, pageable, total);
 	}
 
 	private JPQLQuery<Long> getPostCount(String targetUsername) {

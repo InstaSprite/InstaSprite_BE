@@ -22,4 +22,6 @@ public interface PostRepositoryQuerydsl {
 
 	Optional<PostDto> findMostLikedPostDto();
 
+	Page<PostDto> searchPostDtoByContentContains(String content, Pageable pageable, Long memberId);
+
 }
