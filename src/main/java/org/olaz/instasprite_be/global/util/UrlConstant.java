@@ -24,6 +24,8 @@ public class UrlConstant {
     public static final String AUTH = "/auth";
     public static final String AUTH_GOOGLE = AUTH + "/google";        // POST - login with Google
     public static final String AUTH_REFRESH = AUTH + "/refresh";      // POST - refresh token     // POST - logout
+    public static final String AUTH_LOGIN = AUTH + "/login";          // POST - local login
+    public static final String AUTH_REGISTER = AUTH + "/register";    // POST - local register
 
     // ============================================
     // MEMBERS URLs (Users) - "/accounts" mapping in controllers

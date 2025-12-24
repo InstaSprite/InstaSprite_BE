@@ -17,9 +17,13 @@ public interface MemberRepository
 
 	Optional<Member> findByGoogleId(String googleId);
 
+	Optional<Member> findByEmail(String email);
+
 	boolean existsByGoogleId(String googleId);
 
 	boolean existsByUsername(String username);
+
+	boolean existsByEmail(String email);
 
 	List<Member> findAllByUsernameIn(Collection<String> usernames);
 

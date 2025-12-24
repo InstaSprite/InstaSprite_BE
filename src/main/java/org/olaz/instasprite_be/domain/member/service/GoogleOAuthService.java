@@ -9,6 +9,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import org.olaz.instasprite_be.domain.member.dto.GoogleUserInfo;
 import org.olaz.instasprite_be.domain.member.dto.JwtDto;
 import org.olaz.instasprite_be.domain.member.entity.Member;
+import org.olaz.instasprite_be.domain.member.entity.MemberProvider;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
 //import org.olaz.instasprite_be.domain.search.entity.SearchMember;
 //import org.olaz.instasprite_be.domain.search.repository.SearchMemberRepository;
@@ -128,6 +129,7 @@ public class GoogleOAuthService {
                     .name(googleUserInfo.getName())
                     .googleId(googleUserInfo.getGoogleId())
                     .email(googleUserInfo.getEmail())
+                    .provider(MemberProvider.GOOGLE)
                     .build();
 
             log.info("Saving member to database: {}", member.getUsername());

@@ -39,6 +39,8 @@ public class SecurityConfig {
 
         "/api/v1/auth/google/**",
         "/api/v1/auth/refresh",
+        "/api/v1/auth/login",
+        "/api/v1/auth/register",
 
         "/actuator/**",
 
@@ -103,7 +105,7 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(Arrays.asList(
             "http://localhost:*",      
             "https://localhost:*",     
-            "http://instasprite.duckdns.org:*",  
+            "http://euler.olaz.io.vn:*",
             "*"                        
         ));
         

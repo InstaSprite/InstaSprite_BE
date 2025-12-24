@@ -37,6 +37,8 @@ public enum ErrorCode {
     UNBLOCK_MYSELF_FAIL(400, "M008", "You cannot unblock yourself."),
     LOGOUT_BY_ANOTHER(401, "M009", "Logged out due to another device."),
     EMAIL_ALREADY_REGISTERED(400, "M010", "Email is already registered."),
+    INVALID_CREDENTIALS(401, "M011", "Invalid username/email or password."),
+    ACCOUNT_PROVIDER_MISMATCH(400, "M012", "Account is registered with a different provider."),
 
     // Follow
     FOLLOW_ALREADY_EXIST(400, "F001", "User already followed."),

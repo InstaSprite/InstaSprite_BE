@@ -12,9 +12,9 @@ WORKDIR /app
 
 COPY --from=build /app/target/*.jar /app/app.jar
 
-EXPOSE 9090
+EXPOSE 8080
 
-ENV SPRING_PROFILE=prod
+ENV SPRING_PROFILE=dev
 
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=${SPRING_PROFILE}", "/app/app.jar"]
 

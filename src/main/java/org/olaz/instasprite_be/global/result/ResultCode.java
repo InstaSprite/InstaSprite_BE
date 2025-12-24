@@ -20,6 +20,8 @@ public enum ResultCode {
 	REISSUE_SUCCESS(200, "M003", "Token reissue was successful."),
 	TOKEN_REFRESH_SUCCESS(200, "M004", "Token refresh was successful."),
 	LOGOUT_SUCCESS(200, "M005", "Logged out successfully."),
+	LOCAL_REGISTER_SUCCESS(200, "M006", "Local registration was successful."),
+	LOCAL_LOGIN_SUCCESS(200, "M007", "Local login was successful."),
 
 	// Member - Profile
 	GET_USER_PROFILE_SUCCESS(200, "M010", "Retrieved user profile."),

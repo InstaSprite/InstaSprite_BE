@@ -45,6 +45,13 @@ public class Member {
     @Column(name = "member_google_id", unique = true)
     private String googleId;
 
+    @Column(name = "member_password", length = 255)
+    private String password;
+
+    @Column(name = "member_provider", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
+    private MemberProvider provider;
+
     @Column(name = "member_role")
     @Enumerated(EnumType.STRING)
     private MemberRole role;
@@ -55,7 +62,7 @@ public class Member {
     @Column(name = "member_bio", columnDefinition = "TEXT")
     private String introduce;
 
-    @Column(name = "member_email")
+    @Column(name = "member_email", unique = true)
     private String email;
 
     @OneToMany(mappedBy = "member")
@@ -71,11 +78,13 @@ public class Member {
     private Image image;
 
     @Builder
-    public Member(String username, String name, String googleId, String email) {
+    public Member(String username, String name, String googleId, String email, String password, MemberProvider provider) {
         this.username = username;
         this.name = name;
         this.email = email;
         this.googleId = googleId;
+        this.password = password;
+        this.provider = provider != null ? provider : MemberProvider.GOOGLE;
 
         this.role = MemberRole.ROLE_USER;
         this.image = Image.builder()
