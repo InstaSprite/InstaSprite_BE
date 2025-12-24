@@ -20,6 +20,8 @@ public interface PostRepositoryQuerydsl {
 
 	Page<PostDto> findAllPostDtoPage(Pageable pageable, Long memberId);
 
+	List<PostDto> findAllPostDtoWithCursor(Long cursor, int size, Long memberId);
+
 	Optional<PostDto> findMostLikedPostDto();
 
 	Page<PostDto> searchPostDtoByContentContains(String content, Pageable pageable, Long memberId);

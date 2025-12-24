@@ -165,6 +165,29 @@ public class PostRepositoryQuerydslImpl implements PostRepositoryQuerydsl {
 	}
 
 	@Override
+	public List<PostDto> findAllPostDtoWithCursor(Long cursor, int size, Long memberId) {
+		return queryFactory
+			.select(new QPostDto(
+				post.id,
+				post.content,
+				post.uploadDate,
+				post.member,
+				post.comments.size(),
+				post.postLikes.size(),
+				isExistBookmarkWherePostEqMemberIdEq(memberId),
+				isExistPostLikeWherePostEqAndMemberIdEq(memberId),
+				post.commentFlag,
+				isFollowing(memberId)
+			))
+			.from(post)
+			.innerJoin(post.member, member)
+			.where(cursor == null ? null : post.id.lt(cursor))
+			.orderBy(post.id.desc())
+			.limit(size + 1)
+			.fetch();
+	}
+
+	@Override
 	public Page<PostDto> searchPostDtoByContentContains(String content, Pageable pageable, Long memberId) {
 		final BooleanExpression predicate = post.content.containsIgnoreCase(content);
 

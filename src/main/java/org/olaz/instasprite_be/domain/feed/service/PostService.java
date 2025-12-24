@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 //import org.olaz.instasprite_be.domain.alarm.service.AlarmService;
 import org.olaz.instasprite_be.domain.feed.dto.CommentDto;
+import org.olaz.instasprite_be.domain.feed.dto.CursorPageResponse;
 import org.olaz.instasprite_be.domain.feed.dto.PostDto;
 import org.olaz.instasprite_be.domain.feed.dto.PostImageDto;
 //import org.olaz.instasprite_be.domain.feed.dto.PostImageTagRequest;
@@ -144,6 +145,20 @@ public class PostService {
 		final Page<PostDto> postDtoPage = postRepository.findAllPostDtoPage(pageable, loginMember.getId());
 		setContents(loginMember, postDtoPage.getContent());
 		return postDtoPage;
+	}
+
+	public CursorPageResponse<PostDto> getPostDtoWithCursor(Long cursor, int size) {
+		final Member loginMember = authUtil.getLoginMember();
+		final List<PostDto> postDtos = postRepository.findAllPostDtoWithCursor(cursor, size, loginMember.getId());
+		
+		Long nextCursor = null;
+		if (postDtos.size() > size) {
+			nextCursor = postDtos.get(size - 1).getPostId();
+			postDtos.remove(size);
+		}
+		
+		setContents(loginMember, postDtos);
+		return CursorPageResponse.of(postDtos, nextCursor);
 	}
 
 	public Page<PostDto> searchPostsByContent(String query, int page, int size) {

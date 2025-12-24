@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+import org.olaz.instasprite_be.domain.feed.dto.CursorPageResponse;
 import org.olaz.instasprite_be.domain.feed.dto.PostDto;
 import org.olaz.instasprite_be.domain.feed.dto.PostUploadRequest;
 import org.olaz.instasprite_be.domain.feed.dto.PostUploadResponse;
@@ -69,11 +70,10 @@ public class PostController {
 	})
 	@GetMapping
 	public ResponseEntity<ResultResponse> getPostPage(
-			@Parameter(description = "Post page", example = "1", required = true) @RequestParam int page) {
-		page = (page == BASE_PAGE_NUMBER ? BASE_PAGE_NUMBER : page - PAGE_ADJUSTMENT_VALUE);
-		final Page<PostDto> postPage = postService.getPostDtoPageForAllUsers(BASE_POST_SIZE, page);
+			@Parameter(description = "Cursor (post ID) for pagination", example = "100", required = false) @RequestParam(required = false) Long cursor) {
+		final CursorPageResponse<PostDto> response = postService.getPostDtoWithCursor(cursor, BASE_POST_SIZE);
 
-		return ResponseEntity.ok(ResultResponse.of(GET_POST_PAGE_SUCCESS, postPage.getContent()));
+		return ResponseEntity.ok(ResultResponse.of(GET_POST_PAGE_SUCCESS, response));
 	}
 
 	@Operation(summary = "Get 10 most recent posts")
@@ -97,11 +97,10 @@ public class PostController {
 	})
 	@GetMapping(POST_RECENT_PATH + "/page")
 	public ResponseEntity<ResultResponse> getRecentPostsPage(
-			@Parameter(description = "Post page", example = "1", required = true) @RequestParam int page) {
-		page = (page == BASE_PAGE_NUMBER ? BASE_PAGE_NUMBER : page - PAGE_ADJUSTMENT_VALUE);
-		final Page<PostDto> postPage = postService.getPostDtoPageForAllUsers(BASE_POST_SIZE, page);
+			@Parameter(description = "Cursor (post ID) for pagination", example = "100", required = false) @RequestParam(required = false) Long cursor) {
+		final CursorPageResponse<PostDto> response = postService.getPostDtoWithCursor(cursor, BASE_POST_SIZE);
 
-		return ResponseEntity.ok(ResultResponse.of(GET_RECENT_POSTS_SUCCESS, postPage.getContent()));
+		return ResponseEntity.ok(ResultResponse.of(GET_RECENT_POSTS_SUCCESS, response));
 	}
 
 	@Operation(summary = "Delete post")
