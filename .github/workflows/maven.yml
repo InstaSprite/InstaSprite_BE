@@ -53,5 +53,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           command_timeout: 10m
-          script: cmd.exe /c "cd /d C:\Users\${{ secrets.SSH_USER }}\instasprite\script && run-container.bat"
+          script: cmd.exe /c "cd /d C:\Users\${{ secrets.SSH_USER }}\Downloads\deploy && run-container.bat"
 
