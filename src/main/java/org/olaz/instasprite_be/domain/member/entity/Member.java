@@ -89,8 +89,8 @@ public class Member {
         this.role = MemberRole.ROLE_USER;
         this.image = Image.builder()
                 .imageName("default")
-                .imageType(ImageType.PNG)
-                .imageUrl("default.png")
+                .imageType(ImageType.JPEG)
+                .imageUrl("default.jpeg")
                 .imageUUID("base-UUID")
                 .build();
     }
