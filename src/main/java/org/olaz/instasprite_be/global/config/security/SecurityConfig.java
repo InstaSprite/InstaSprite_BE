@@ -1,12 +1,18 @@
 package org.olaz.instasprite_be.global.config.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -29,14 +35,21 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private static final String[] PUBLIC_ENDPOINTS = {
-        // Swagger/OpenAPI
+    @Value("${SWAGGER_USERNAME:admin}")
+    private String swaggerUsername;
+
+    @Value("${SWAGGER_PASSWORD:admin}")
+    private String swaggerPassword;
+
+    private static final String[] SWAGGER_ENDPOINTS = {
         "/v3/api-docs/**",
         "/swagger-ui/**",
         "/swagger-ui.html",
         "/swagger-resources/**",
-        "/webjars/**",
+        "/webjars/**"
+    };
 
+    private static final String[] PUBLIC_ENDPOINTS = {
         "/api/v1/auth/google/**",
         "/api/v1/auth/refresh",
         "/api/v1/auth/login",
@@ -56,7 +69,43 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Security filter chain for Swagger UI endpoints with HTTP Basic Authentication
+     * This runs first (Order 1) to protect Swagger before the main security chain
+     */
     @Bean
+    @Order(1)
+    public SecurityFilterChain swaggerSecurityFilterChain(HttpSecurity http, UserDetailsService swaggerUserDetailsService) throws Exception {
+        http
+            .securityMatcher(SWAGGER_ENDPOINTS)
+            .userDetailsService(swaggerUserDetailsService)
+            .authorizeHttpRequests(auth -> auth
+                .anyRequest().authenticated()
+            )
+            .httpBasic(basic -> {})
+            .sessionManagement(session -> 
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
+
+    /**
+     * User details service for Swagger Basic Auth
+     */
+    @Bean
+    public UserDetailsService swaggerUserDetailsService() {
+        UserDetails user = User.builder()
+            .username(swaggerUsername)
+            .password(passwordEncoder().encode(swaggerPassword))
+            .roles("SWAGGER")
+            .build();
+        return new InMemoryUserDetailsManager(user);
+    }
+
+    @Bean
+    @Order(2)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             // CORS configuration
