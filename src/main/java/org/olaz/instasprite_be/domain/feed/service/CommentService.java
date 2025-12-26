@@ -219,7 +219,7 @@ public class CommentService {
 	@Transactional
 	public void deleteAllInPost(Post post) {
 		final List<Comment> comments = commentRepository.findAllByPost(post);
-		commentLikeService.deleteAll(comments);
+		commentRepository.deleteAll(comments);
 //		recentCommentService.deleteAll(post);
 	}
 
