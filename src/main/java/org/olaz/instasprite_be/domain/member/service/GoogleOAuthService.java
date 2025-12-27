@@ -97,6 +97,13 @@ public class GoogleOAuthService {
 
             log.info("Member found/created with ID: {}, Username: {}", member.getId(), member.getUsername());
 
+            if (member.getProvider() == MemberProvider.GOOGLE && googleUserInfo.isEmailVerified()) {
+                if (!member.isEmailVerified()) {
+                    member.verifyEmail();
+                    memberRepository.save(member);
+                }
+            }
+
             if (member.isTotpEnabled()) {
                 if (otpCode == null || otpCode.isBlank()) {
                     throw new TotpRequiredException();
