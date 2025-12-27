@@ -25,6 +25,7 @@ public enum ErrorCode {
     FILE_CONVERT_FAIL(500, "G008", "File cannot be converted."),
     ENTITY_TYPE_INVALID(500, "G009", "Invalid entity type."),
     FILTER_MUST_RESPOND(500, "G010", "Request that should be processed by filter reached Controller."),
+    RATE_LIMIT_EXCEEDED(429, "G011", "Too many requests. Please try again later."),
 
     // Member
     MEMBER_NOT_FOUND(400, "M001", "User does not exist."),
@@ -39,6 +40,15 @@ public enum ErrorCode {
     EMAIL_ALREADY_REGISTERED(400, "M010", "Email is already registered."),
     INVALID_CREDENTIALS(401, "M011", "Invalid username/email or password."),
     ACCOUNT_PROVIDER_MISMATCH(400, "M012", "Account is registered with a different provider."),
+    TOTP_REQUIRED(401, "M013", "OTP code is required."),
+    TOTP_INVALID(401, "M014", "Invalid OTP code."),
+    TOTP_NOT_ENROLLED(400, "M015", "TOTP is not enrolled for this account."),
+    TOTP_ALREADY_ENABLED(400, "M016", "TOTP is already enabled."),
+    TOTP_NOT_ENABLED(400, "M017", "TOTP is not enabled."),
+    EMAIL_NOT_VERIFIED(401, "M018", "Email is not verified."),
+    EMAIL_VERIFY_TOKEN_INVALID(400, "M019", "Invalid email verification token."),
+    EMAIL_VERIFY_TOKEN_EXPIRED(400, "M020", "Email verification token has expired."),
+    EMAIL_ALREADY_VERIFIED(400, "M021", "Email is already verified."),
 
     // Follow
     FOLLOW_ALREADY_EXIST(400, "F001", "User already followed."),

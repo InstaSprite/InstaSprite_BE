@@ -45,7 +45,8 @@ public class MemberRepositoryQuerydslImpl implements MemberRepositoryQuerydsl {
 				getPostCount(username),
 				getFollowingCount(username),
 				getFollowerCount(username),
-				member.id.eq(loginMemberId)))
+				member.id.eq(loginMemberId),
+				member.emailVerified))
 			.from(member)
 			.where(member.username.eq(username))
 			.fetchOne();

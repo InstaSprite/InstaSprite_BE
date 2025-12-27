@@ -25,5 +25,9 @@ public class LocalLoginRequest {
     @NotBlank(message = "Password is required")
     @Size(min = 8, max = 64, message = "Password must be 8 to 64 characters")
     private String password;
+
+    @Schema(description = "6-digit OTP from authenticator app (required if 2FA is enabled)", example = "123456")
+    @Size(min = 6, max = 6, message = "OTP code must be 6 digits")
+    private String otpCode;
 }
 

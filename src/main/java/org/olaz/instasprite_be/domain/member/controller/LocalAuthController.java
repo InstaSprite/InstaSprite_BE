@@ -12,13 +12,17 @@ import org.olaz.instasprite_be.domain.member.dto.LocalLoginRequest;
 import org.olaz.instasprite_be.domain.member.dto.LocalRegisterRequest;
 import org.olaz.instasprite_be.domain.member.service.LocalAuthService;
 import org.olaz.instasprite_be.global.result.ResultResponse;
+import org.olaz.instasprite_be.global.util.ClientIpUtil;
 import org.olaz.instasprite_be.global.util.UrlConstant;
+import org.olaz.instasprite_be.global.util.ratelimit.InMemoryRateLimiter;
+import org.olaz.instasprite_be.global.util.ratelimit.RateLimitPolicy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,6 +38,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class LocalAuthController {
 
     private final LocalAuthService localAuthService;
+    private final InMemoryRateLimiter rateLimiter;
 
     @Operation(summary = "Register with username/email/password")
     @ApiResponses({
@@ -57,8 +62,17 @@ public class LocalAuthController {
             @ApiResponse(responseCode = "401", description = "M011 - Invalid credentials.")
     })
     @PostMapping(UrlConstant.AUTH_LOGIN)
-    public ResponseEntity<ResultResponse> login(@Valid @RequestBody LocalLoginRequest request) {
+    public ResponseEntity<ResultResponse> login(HttpServletRequest httpRequest, @Valid @RequestBody LocalLoginRequest request) {
         log.info("Local login API called for {}", request.getIdentifier());
+
+        String ip = ClientIpUtil.getClientIp(httpRequest);
+        // rate limit per IP + identifier (best effort: email/username)
+        rateLimiter.consumeOrThrow(
+                "auth:local-login:" + ip + ":" + request.getIdentifier(),
+                RateLimitPolicy.LOGIN_CAPACITY,
+                RateLimitPolicy.LOGIN_REFILL,
+                1
+        );
 
         JwtDto jwtDto = localAuthService.login(request);
 

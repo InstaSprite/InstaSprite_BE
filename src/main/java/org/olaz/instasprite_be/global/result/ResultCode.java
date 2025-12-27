@@ -22,6 +22,12 @@ public enum ResultCode {
 	LOGOUT_SUCCESS(200, "M005", "Logged out successfully."),
 	LOCAL_REGISTER_SUCCESS(200, "M006", "Local registration was successful."),
 	LOCAL_LOGIN_SUCCESS(200, "M007", "Local login was successful."),
+	TOTP_ENROLL_SUCCESS(200, "M030", "TOTP enrollment was generated."),
+	TOTP_ENABLE_SUCCESS(200, "M031", "TOTP was enabled."),
+	TOTP_DISABLE_SUCCESS(200, "M032", "TOTP was disabled."),
+	TOTP_STATUS_SUCCESS(200, "M033", "TOTP status was retrieved."),
+	EMAIL_VERIFY_SUCCESS(200, "M034", "Email was verified."),
+	EMAIL_VERIFY_RESEND_SUCCESS(200, "M035", "Verification email was sent."),
 
 	// Member - Profile
 	GET_USER_PROFILE_SUCCESS(200, "M010", "Retrieved user profile."),

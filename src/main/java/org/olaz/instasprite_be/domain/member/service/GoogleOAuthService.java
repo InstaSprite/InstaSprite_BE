@@ -10,6 +10,8 @@ import org.olaz.instasprite_be.domain.member.dto.GoogleUserInfo;
 import org.olaz.instasprite_be.domain.member.dto.JwtDto;
 import org.olaz.instasprite_be.domain.member.entity.Member;
 import org.olaz.instasprite_be.domain.member.entity.MemberProvider;
+import org.olaz.instasprite_be.domain.member.exception.TotpInvalidCodeException;
+import org.olaz.instasprite_be.domain.member.exception.TotpRequiredException;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
 //import org.olaz.instasprite_be.domain.search.entity.SearchMember;
 //import org.olaz.instasprite_be.domain.search.repository.SearchMemberRepository;
@@ -37,6 +39,7 @@ public class GoogleOAuthService {
     private final MemberRepository memberRepository;
 //    private final SearchMemberRepository searchMemberRepository;
     private final JwtUtil jwtUtil;
+    private final TotpService totpService;
 
     @Value("${google.client-id}")
     private String googleClientId;
@@ -77,7 +80,7 @@ public class GoogleOAuthService {
      * Login or register user with Google account
      */
     @Transactional
-    public JwtDto loginWithGoogle(String idToken) {
+    public JwtDto loginWithGoogle(String idToken, String otpCode) {
         try {
             log.info("Starting Google login process");
             GoogleUserInfo googleUserInfo = verifyGoogleToken(idToken);
@@ -93,6 +96,15 @@ public class GoogleOAuthService {
                     });
 
             log.info("Member found/created with ID: {}, Username: {}", member.getId(), member.getUsername());
+
+            if (member.isTotpEnabled()) {
+                if (otpCode == null || otpCode.isBlank()) {
+                    throw new TotpRequiredException();
+                }
+                if (!totpService.verifyMemberCode(member, otpCode)) {
+                    throw new TotpInvalidCodeException();
+                }
+            }
 
             JwtDto jwtDto = jwtUtil.generateTokenDto(member);
             log.info("JWT tokens generated successfully");

@@ -1,0 +1,7 @@
+ALTER TABLE member
+    ADD COLUMN IF NOT EXISTS member_totp_enabled BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE member
+    ADD COLUMN IF NOT EXISTS member_totp_secret TEXT;
+
+

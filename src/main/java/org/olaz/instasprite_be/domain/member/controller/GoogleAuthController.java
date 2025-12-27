@@ -5,12 +5,16 @@ import static org.olaz.instasprite_be.global.result.ResultCode.*;
 import jakarta.validation.Valid;
 
 import org.olaz.instasprite_be.global.util.UrlConstant;
+import org.olaz.instasprite_be.global.util.ClientIpUtil;
+import org.olaz.instasprite_be.global.util.ratelimit.InMemoryRateLimiter;
+import org.olaz.instasprite_be.global.util.ratelimit.RateLimitPolicy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.HttpServletRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,6 +38,7 @@ import org.olaz.instasprite_be.global.result.ResultResponse;
 public class GoogleAuthController {
 
     private final GoogleOAuthService googleOAuthService;
+    private final InMemoryRateLimiter rateLimiter;
 
     @Operation(summary = "Login with Google OAuth")
     @ApiResponses({
@@ -43,10 +48,18 @@ public class GoogleAuthController {
         @ApiResponse(responseCode = "401", description = "G005 - Invalid Google token.")
     })
     @PostMapping(UrlConstant.AUTH_GOOGLE)
-    public ResponseEntity<ResultResponse> googleLogin(@Valid @RequestBody GoogleLoginRequest request) {
+    public ResponseEntity<ResultResponse> googleLogin(HttpServletRequest httpRequest, @Valid @RequestBody GoogleLoginRequest request) {
         log.info("Google login attempt");
 
-        final JwtDto jwtDto = googleOAuthService.loginWithGoogle(request.getIdToken());
+        String ip = ClientIpUtil.getClientIp(httpRequest);
+        rateLimiter.consumeOrThrow(
+                "auth:google-login:" + ip,
+                RateLimitPolicy.GOOGLE_LOGIN_CAPACITY,
+                RateLimitPolicy.GOOGLE_LOGIN_REFILL,
+                1
+        );
+
+        final JwtDto jwtDto = googleOAuthService.loginWithGoogle(request.getIdToken(), request.getOtpCode());
 
         final JwtResponse jwtResponse = JwtResponse.builder()
                 .type(jwtDto.getType())

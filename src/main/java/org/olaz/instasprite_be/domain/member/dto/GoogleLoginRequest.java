@@ -20,5 +20,8 @@ public class GoogleLoginRequest {
     @NotBlank(message = "Google ID token is required")
     private String idToken;
 
+    @Schema(description = "6-digit OTP from authenticator app (required if 2FA is enabled)", example = "123456")
+    private String otpCode;
+
 }
 

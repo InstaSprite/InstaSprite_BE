@@ -49,12 +49,16 @@ public class UserProfileResponse {
 	@Schema(description = "Is current user", example = "false")
 	private boolean isMe;
 
+	@Schema(description = "Is email verified (LOCAL only)", example = "true")
+	private boolean isVerifiedEmail;
+
+
 
 	@QueryProjection
 	public UserProfileResponse(String username, String name, Image image,
 		boolean isFollowing, boolean isFollower,
 		String introduce, Long postsCount, Long followingsCount, Long followersCount,
-		boolean isMe) {
+		boolean isMe, boolean isVerifiedEmail) {
 		this.memberUsername = username;
 		this.memberName = name;
 		this.memberImage = image;
@@ -65,6 +69,7 @@ public class UserProfileResponse {
 		this.memberFollowingsCount = followingsCount;
 		this.memberFollowersCount = followersCount;
 		this.isMe = isMe;
+		this.isVerifiedEmail = isVerifiedEmail;
 	}
 
 	public void setFollowingMemberFollow(List<FollowDto> followingMemberFollow, int maxCount) {

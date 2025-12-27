@@ -34,11 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                   FilterChain filterChain) throws ServletException, IOException {
         
         String requestURI = request.getRequestURI();
-
-        if (isPublicEndpoint(requestURI)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        boolean isPublic = isPublicEndpoint(requestURI);
         
         try {
             String token = extractTokenFromRequest(request);
@@ -50,17 +46,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             
         } catch (JwtExpiredException e) {
-            log.warn("JWT token expired for request: {}", request.getRequestURI());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.JWT_EXPIRED.getMessage());
-            return;
+            if (!isPublic) {
+                log.warn("JWT token expired for request: {}", request.getRequestURI());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.JWT_EXPIRED.getMessage());
+                return;
+            }
         } catch (JwtInvalidException e) {
-            log.warn("Invalid JWT token for request: {}", request.getRequestURI());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.JWT_INVALID.getMessage());
-            return;
+            if (!isPublic) {
+                log.warn("Invalid JWT token for request: {}", request.getRequestURI());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.JWT_INVALID.getMessage());
+                return;
+            }
         } catch (BusinessException e) {
-            log.warn("JWT authentication failed for request: {} - {}", request.getRequestURI(), e.getMessage());
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-            return;
+            if (!isPublic) {
+                log.warn("JWT authentication failed for request: {} - {}", request.getRequestURI(), e.getMessage());
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+                return;
+            }
         }
         
         filterChain.doFilter(request, response);

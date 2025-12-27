@@ -27,6 +27,18 @@ public class UrlConstant {
     public static final String AUTH_LOGIN = AUTH + "/login";          // POST - local login
     public static final String AUTH_REGISTER = AUTH + "/register";    // POST - local register
 
+    // 2FA (TOTP Authenticator)
+    public static final String AUTH_2FA = AUTH + "/2fa";
+    public static final String AUTH_2FA_ENROLL = AUTH_2FA + "/enroll";   // POST - generate secret + otpauth URI
+    public static final String AUTH_2FA_ENABLE = AUTH_2FA + "/enable";   // POST - verify code & enable
+    public static final String AUTH_2FA_DISABLE = AUTH_2FA + "/disable"; // POST - verify code & disable
+    public static final String AUTH_2FA_STATUS = AUTH_2FA + "/status";   // GET - enabled?
+
+    // Email verification (LOCAL)
+    public static final String AUTH_EMAIL = AUTH + "/email";
+    public static final String AUTH_EMAIL_VERIFY = AUTH_EMAIL + "/verify";   // GET - verify token
+    public static final String AUTH_EMAIL_RESEND = AUTH_EMAIL + "/resend";   // POST - resend verify email
+
     // ============================================
     // MEMBERS URLs (Users) - "/accounts" mapping in controllers
     // ============================================

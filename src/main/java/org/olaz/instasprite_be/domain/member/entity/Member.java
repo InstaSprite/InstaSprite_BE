@@ -65,6 +65,19 @@ public class Member {
     @Column(name = "member_email", unique = true)
     private String email;
 
+    @Column(name = "member_email_verified", nullable = false)
+    private boolean emailVerified = false;
+
+    @Column(name = "member_totp_enabled", nullable = false)
+    private boolean totpEnabled = false;
+
+    /**
+     * Encrypted (or plaintext) shared secret for RFC-6238 TOTP.
+     * Stored as Base64(iv+ciphertext) when encryption is enabled.
+     */
+    @Column(name = "member_totp_secret", columnDefinition = "TEXT")
+    private String totpSecret;
+
     @OneToMany(mappedBy = "member")
     private List<Follow> followings;
 
@@ -87,6 +100,7 @@ public class Member {
         this.provider = provider != null ? provider : MemberProvider.GOOGLE;
 
         this.role = MemberRole.ROLE_USER;
+        this.emailVerified = this.provider == MemberProvider.GOOGLE;
         this.image = Image.builder()
                 .imageName("default")
                 .imageType(ImageType.JPEG)
@@ -111,6 +125,10 @@ public class Member {
         this.email = email;
     }
 
+    public void verifyEmail() {
+        this.emailVerified = true;
+    }
+
     public void uploadImage(Image image) {
         deleteImage();
         this.image = image;
@@ -126,6 +144,20 @@ public class Member {
                 .imageUrl("default.png")
                 .imageUUID("base-UUID")
                 .build();
+    }
+
+    public void setupTotpSecret(String totpSecret) {
+        this.totpSecret = totpSecret;
+        this.totpEnabled = false;
+    }
+
+    public void enableTotp() {
+        this.totpEnabled = true;
+    }
+
+    public void disableTotp() {
+        this.totpEnabled = false;
+        this.totpSecret = null;
     }
 
 }

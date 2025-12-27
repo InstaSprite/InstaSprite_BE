@@ -10,6 +10,8 @@ import org.olaz.instasprite_be.domain.member.entity.MemberProvider;
 import org.olaz.instasprite_be.domain.member.exception.EmailAlreadyRegisteredException;
 import org.olaz.instasprite_be.domain.member.exception.InvalidCredentialsException;
 import org.olaz.instasprite_be.domain.member.exception.ProviderMismatchException;
+import org.olaz.instasprite_be.domain.member.exception.TotpInvalidCodeException;
+import org.olaz.instasprite_be.domain.member.exception.TotpRequiredException;
 import org.olaz.instasprite_be.domain.member.exception.UsernameAlreadyExistException;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
 import org.olaz.instasprite_be.global.util.JwtUtil;
@@ -27,6 +29,8 @@ public class LocalAuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final TotpService totpService;
+    private final EmailVerificationService emailVerificationService;
 
     @Transactional
     public void register(LocalRegisterRequest request) {
@@ -48,7 +52,8 @@ public class LocalAuthService {
                 .provider(MemberProvider.LOCAL)
                 .build();
 
-        memberRepository.save(member);
+        Member saved = memberRepository.save(member);
+        emailVerificationService.sendVerificationEmailForLocalMember(saved);
     }
 
     @Transactional(readOnly = true)
@@ -64,6 +69,15 @@ public class LocalAuthService {
 
         if (member.getPassword() == null || !passwordEncoder.matches(request.getPassword(), member.getPassword())) {
             throw new InvalidCredentialsException();
+        }
+
+        if (member.isTotpEnabled()) {
+            if (request.getOtpCode() == null || request.getOtpCode().isBlank()) {
+                throw new TotpRequiredException();
+            }
+            if (!totpService.verifyMemberCode(member, request.getOtpCode())) {
+                throw new TotpInvalidCodeException();
+            }
         }
 
         JwtDto tokens = jwtUtil.generateTokenDto(member);
