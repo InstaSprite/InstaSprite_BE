@@ -35,7 +35,8 @@ public class PasswordResetController {
     @Operation(summary = "Request password reset")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "M038 - Password reset email was sent."),
-            @ApiResponse(responseCode = "400", description = "G003 - Invalid input.\nG004 - Invalid input type."),
+            @ApiResponse(responseCode = "400", description = "G003 - Invalid input.\nG004 - Invalid input type.\n"
+                    + "M012 - Account is registered with a different provider.\nM018 - Email is not verified."),
             @ApiResponse(responseCode = "500", description = "E001 - Error occurred while sending email.")
     })
     @PostMapping(UrlConstant.AUTH_PASSWORD_FORGOT)

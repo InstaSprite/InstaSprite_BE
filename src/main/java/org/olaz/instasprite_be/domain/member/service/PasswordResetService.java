@@ -8,9 +8,11 @@ import org.olaz.instasprite_be.domain.member.dto.ResetPasswordRequest;
 import org.olaz.instasprite_be.domain.member.entity.Member;
 import org.olaz.instasprite_be.domain.member.entity.MemberProvider;
 import org.olaz.instasprite_be.domain.member.entity.PasswordResetToken;
+import org.olaz.instasprite_be.domain.member.exception.EmailNotVerifiedException;
 import org.olaz.instasprite_be.domain.member.exception.PasswordResetTokenExpiredException;
 import org.olaz.instasprite_be.domain.member.exception.PasswordResetTokenInvalidException;
 import org.olaz.instasprite_be.domain.member.exception.PasswordSameAsOldException;
+import org.olaz.instasprite_be.domain.member.exception.ProviderMismatchException;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
 import org.olaz.instasprite_be.domain.member.repository.PasswordResetTokenRepository;
 import org.olaz.instasprite_be.global.error.exception.EmailSendFailException;
@@ -59,10 +61,16 @@ public class PasswordResetService {
             return;
         }
 
-        // Only allow password reset for LOCAL provider accounts
-        if (member.getProvider() != MemberProvider.LOCAL) {
-            log.info("Password reset requested for non-LOCAL account: {}", email);
-            return;
+        // Check if user logged in with Google - not allowed to reset password
+        if (member.getProvider() == MemberProvider.GOOGLE) {
+            log.info("Password reset requested for Google account: {}", email);
+            throw new ProviderMismatchException();
+        }
+
+        // Check if local account but email not verified - not allowed to reset password
+        if (member.getProvider() == MemberProvider.LOCAL && !member.isEmailVerified()) {
+            log.info("Password reset requested for LOCAL account with unverified email: {}", email);
+            throw new EmailNotVerifiedException();
         }
 
         if (member.getEmail() == null || member.getEmail().isBlank()) {
