@@ -28,6 +28,10 @@ public enum ResultCode {
 	TOTP_STATUS_SUCCESS(200, "M033", "TOTP status was retrieved."),
 	EMAIL_VERIFY_SUCCESS(200, "M034", "Email was verified."),
 	EMAIL_VERIFY_RESEND_SUCCESS(200, "M035", "Verification email was sent."),
+	FCM_TOKEN_UPSERT_SUCCESS(200, "M036", "FCM token was saved."),
+	FCM_TOKEN_DELETE_SUCCESS(200, "M037", "FCM token was deleted."),
+	PASSWORD_RESET_EMAIL_SENT(200, "M038", "Password reset email was sent."),
+	PASSWORD_RESET_SUCCESS(200, "M039", "Password was reset successfully."),
 
 	// Member - Profile
 	GET_USER_PROFILE_SUCCESS(200, "M010", "Retrieved user profile."),

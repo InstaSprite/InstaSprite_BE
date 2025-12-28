@@ -49,6 +49,9 @@ public enum ErrorCode {
     EMAIL_VERIFY_TOKEN_INVALID(400, "M019", "Invalid email verification token."),
     EMAIL_VERIFY_TOKEN_EXPIRED(400, "M020", "Email verification token has expired."),
     EMAIL_ALREADY_VERIFIED(400, "M021", "Email is already verified."),
+    PASSWORD_RESET_TOKEN_INVALID(400, "M022", "Invalid password reset token."),
+    PASSWORD_RESET_TOKEN_EXPIRED(400, "M023", "Password reset token has expired."),
+    PASSWORD_SAME_AS_OLD(400, "M024", "New password cannot be the same as old password."),
 
     // Follow
     FOLLOW_ALREADY_EXIST(400, "F001", "User already followed."),

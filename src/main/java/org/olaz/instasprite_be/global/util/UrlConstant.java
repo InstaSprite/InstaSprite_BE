@@ -39,6 +39,11 @@ public class UrlConstant {
     public static final String AUTH_EMAIL_VERIFY = AUTH_EMAIL + "/verify";   // GET - verify token
     public static final String AUTH_EMAIL_RESEND = AUTH_EMAIL + "/resend";   // POST - resend verify email
 
+    // Password reset
+    public static final String AUTH_PASSWORD = AUTH + "/password";
+    public static final String AUTH_PASSWORD_FORGOT = AUTH_PASSWORD + "/forgot";   // POST - request password reset
+    public static final String AUTH_PASSWORD_RESET = AUTH_PASSWORD + "/reset";    // POST - reset password with temp password
+
     // ============================================
     // MEMBERS URLs (Users) - "/accounts" mapping in controllers
     // ============================================
@@ -130,7 +135,8 @@ public class UrlConstant {
     // ============================================
     // NOTIFICATIONS URLs (Alarms/Notifications)
     // ============================================
-//    public static final String ALARMS = "/alarms";                                             // GET - list alarms/notifications
+    public static final String NOTIFICATIONS = "/notifications";
+    public static final String NOTIFICATIONS_FCM_TOKEN = NOTIFICATIONS + "/fcm-token";          // POST - register, DELETE - unregister
 
 
     // ============================================

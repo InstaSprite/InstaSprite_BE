@@ -11,7 +11,9 @@ import org.olaz.instasprite_be.domain.member.exception.EmailVerifyTokenExpiredEx
 import org.olaz.instasprite_be.domain.member.exception.EmailVerifyTokenInvalidException;
 import org.olaz.instasprite_be.domain.member.repository.EmailVerificationTokenRepository;
 import org.olaz.instasprite_be.domain.member.repository.MemberRepository;
+import org.olaz.instasprite_be.domain.notification.event.EmailVerifiedEvent;
 import org.olaz.instasprite_be.global.error.exception.EmailSendFailException;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -37,6 +39,7 @@ public class EmailVerificationService {
     private final EmailVerificationTokenRepository tokenRepository;
     private final MemberRepository memberRepository;
     private final JavaMailSender mailSender;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Value("${security.email.verify.link-base-url:}")
     private String linkBaseUrl;
@@ -87,7 +90,10 @@ public class EmailVerificationService {
 
     @Transactional
     public IssueResult issueToken(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(EmailVerifyTokenInvalidException::new);
+        Member member = memberRepository.findByIdForUpdate(memberId).orElseThrow(EmailVerifyTokenInvalidException::new);
+
+        tokenRepository.deleteAllUnusedByMemberId(memberId);
+
         String raw = generateRawToken();
         String hash = sha256Hex(raw);
 
@@ -117,16 +123,22 @@ public class EmailVerificationService {
 
         LocalDateTime now = LocalDateTime.now();
         if (row.isUsed()) {
-            // idempotent success
-            return;
+            if (row.getMember().isEmailVerified()) {
+                return;
+            }
+            throw new EmailVerifyTokenInvalidException();
         }
         if (row.isExpired(now)) {
             throw new EmailVerifyTokenExpiredException();
         }
 
         Member member = row.getMember();
+        boolean wasVerified = member.isEmailVerified();
         member.verifyEmail();
         row.markUsed(now);
+        if (!wasVerified) {
+            applicationEventPublisher.publishEvent(new EmailVerifiedEvent(member.getId()));
+        }
         // JPA dirty checking handles saves
     }
 

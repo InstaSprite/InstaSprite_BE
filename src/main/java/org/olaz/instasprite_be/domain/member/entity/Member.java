@@ -160,4 +160,8 @@ public class Member {
         this.totpSecret = null;
     }
 
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
 }
